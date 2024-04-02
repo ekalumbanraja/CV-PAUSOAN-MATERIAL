@@ -14,14 +14,18 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('product_name')->nullable();
-            $table->string('category')->nullable();
+            $table->unsignedBigInteger('category_id'); // Menambahkan kolom category_id sebagai foreign key
             $table->string('stok')->nullable();
             $table->string('image')->nullable();
             $table->string('description')->nullable();
             $table->string('price')->nullable();
             $table->timestamps();
+    
+            // Menambahkan constraint foreign key ke kolom category_id
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
+    
 
     /**
      * Reverse the migrations.

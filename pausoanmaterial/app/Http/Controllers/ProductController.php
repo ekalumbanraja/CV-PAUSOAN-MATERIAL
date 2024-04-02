@@ -9,7 +9,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return view('admin/product/product');
+        $product = product::all();
+
+        return view('admin/product/product',compact('product'));
     }
 
     public function tampilproduct (){
@@ -22,7 +24,7 @@ class ProductController extends Controller
     {
        $product = new Product();
        $product->product_name = $request->product_name;
-       $product->category = $request->category;
+       $product->category_id = $request->category_id; // Mengambil category_id dari form
        $product->stok = $request->stok;
        $product->description = $request->description;
        $product->price = $request->price;
@@ -37,7 +39,7 @@ class ProductController extends Controller
        $imageName = time().'.'.$image->getClientOriginalExtension();  
        $image->move(public_path('images'), $imageName);
     
-       // Simpan nama file gambar ke dalam database
+       // Simpan nama file gambar ke dalam model
        $product->image = $imageName;
     
        $product->save();
@@ -45,33 +47,11 @@ class ProductController extends Controller
        return redirect()->back()->with('success', 'Produk berhasil ditambahkan.');
     }
     
-    // Metode untuk menyimpan pengguna baru
-    public function store(Request $request)
+    
+    public function editproduct($id)
     {
-        // Logika untuk menyimpan pengguna baru
+        $product = Product::findOrFail($id); // Mengambil produk berdasarkan ID
+        return view('admin.product.editproduct', compact('product'));
     }
-
-    // Metode untuk menampilkan detail pengguna tertentu
-    public function show($id)
-    {
-        // Logika untuk menampilkan detail pengguna tertentu berdasarkan ID
-    }
-
-    // Metode untuk menampilkan formulir pengeditan pengguna
-    public function edit($id)
-    {
-        // Logika untuk menampilkan formulir pengeditan pengguna berdasarkan ID
-    }
-
-    // Metode untuk menyimpan pengeditan pengguna
-    public function update(Request $request, $id)
-    {
-        // Logika untuk menyimpan pengeditan pengguna berdasarkan ID
-    }
-
-    // Metode untuk menghapus pengguna
-    public function destroy($id)
-    {
-        // Logika untuk menghapus pengguna berdasarkan ID
-    }
+    
 }

@@ -60,6 +60,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/product/tambahproduct', [ProductController::class, 'tambahproduct'])->name('tambah_product');
 }); 
 
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    Route::get('admin/product/editproduct/{id}', [ProductController::class, 'editproduct'])->name('edit_product');
+}); 
+
+
+
 
 
 
