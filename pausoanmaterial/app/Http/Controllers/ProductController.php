@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $product = product::all();
-
-        return view('admin/product/product',compact('product') );
+        $categoryId = $request->query('category_id');
+        $products = Product::when($categoryId, function ($query) use ($categoryId) {
+            return $query->where('category_id', $categoryId);
+        })->get();
+        $categories = Category::all(); // Mendapatkan semua kategori
+    
+        return view('admin.product.product', compact('products', 'categories'));
     }
 
     public function tampilproduct (){

@@ -28,7 +28,16 @@
                         </button>
                     </div>
                 </div>
-                <div class="normal-table-area">
+                <div class="normal-table-area"><form action="{{ route('admin.Product') }}" method="GET">
+    <select name="category_id">
+        <option value="">Semua Kategori</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+        @endforeach
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -51,18 +60,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($product as $index => $product)
+                            @foreach($products as $index => $item)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $product->product_name }}</td>
-                                <td><img src="{{ asset('images/' . $product->image) }}" alt="Product Image" style="max-width: 100px;"></td>
-                                <td>{{ $product->description }}</td>
-                                <td>{{ $product->category->category_name }}</td> <!-- Menampilkan nama kategori -->
-                                <td>{{ $product->price }}</td>
+                                <td>{{ $item->product_name }}</td>
+                                <td><img src="{{ asset('images/' . $item->image) }}" alt="Product Image" style="max-width: 100px;"></td>
+                                <td>{{ $item->description }}</td>
+                                <td>{{ $item->category->category_name }}</td>
+                                <td>{{ $item->price }}</td>
                                 <td>
-                                       <a class="btn btn-warning notika-btn-warning" href="{{ route('edit_product', ['id' => $product->id]) }}">Edit</a>
+                                       <a class="btn btn-warning notika-btn-warning" href="{{ route('edit_product', ['id' => $item->id]) }}">Edit</a>
 
-                                        <a class="btn btn-danger notika-btn-danger" href="">Delete</button>
+                                       <a class="btn btn-danger notika-btn-danger" href="{{ route('delete_product', ['id' => $item->id]) }}">Delete</a>
+
 
                                 </td>
                             </tr>
