@@ -2,6 +2,33 @@
 @section('title', 'Product')
 
 @section('content')
+
+<div class="breadcomb-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="breadcomb-list">
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                  <div class="breadcomb-wp">
+                    <div class="breadcomb-icon">
+                      <i class="notika-icon notika-windows"></i>
+                    </div>
+                    <div class="breadcomb-ctn">
+                      <h2>Product</h2>
+                      <p>Welcome to Product <span class="bread-ntd">table</span></p>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                    <div class="breadcomb-report">
+                        <button data-toggle="tooltip" data-placement="left" title="Tambah Produk" class="btn" onclick="window.location='{{ route('tampil_product') }}'">
+                            <i class="notika-icon notika-sent"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="normal-table-area">
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

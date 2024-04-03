@@ -54,7 +54,7 @@ Route::middleware(['auth','user-access:admin'])->group(function () {
 });
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/tampilproduct', [ProductController::class, 'tampilproduct'])->name('tampil_product');
-}); 
+});
 
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/product/tambahproduct', [ProductController::class, 'tambahproduct'])->name('tambah_product');
@@ -64,6 +64,13 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/editproduct/{id}', [ProductController::class, 'editproduct'])->name('edit_product');
 }); 
 
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    Route::post('admin/product/updateproduct/{id}', [ProductController::class, 'updateproduct'])->name('update_product');
+}); 
+
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    Route::get('admin/product/deleteproduct/{id}', [ProductController::class, 'deleteproduct'])->name('delete_product');
+}); 
 
 
 
