@@ -5,15 +5,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\GuestController;
+
 // use App\Http\Controllers\CategoryController;
 
 
  
 Auth::routes();
 
-Route::get('/', function () {
+/* GUEST USER */
+
+Route::get('', function () {
     return view('welcome2');
 });
+
+
+Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
+
+Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
+
+Route::post('/checkout', [GuestController::class, 'checkout'])->name('checkout');
+
+
 
    
 /* NORMAL USER */

@@ -28,15 +28,16 @@
                         </button>
                     </div>
                 </div>
-                <div class="normal-table-area"><form action="{{ route('admin.Product') }}" method="GET">
-    <select name="category_id">
-        <option value="">Semua Kategori</option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-        @endforeach
-    </select>
-    <button type="submit">Filter</button>
-</form>
+                <div class="normal-table-area">
+                    <form action="{{ route('admin.Product') }}" method="GET">
+                        <select name="category_id">
+                            <option value="">Semua Kategori</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit">Filter</button>
+                    </form> 
 
 <div class="container">
     <div class="row">
@@ -70,10 +71,7 @@
                                 <td>{{ $item->price }}</td>
                                 <td>
                                        <a class="btn btn-warning notika-btn-warning" href="{{ route('edit_product', ['id' => $item->id]) }}">Edit</a>
-
                                        <a class="btn btn-danger notika-btn-danger" href="{{ route('delete_product', ['id' => $item->id]) }}">Delete</a>
-
-
                                 </td>
                             </tr>
                             @endforeach
