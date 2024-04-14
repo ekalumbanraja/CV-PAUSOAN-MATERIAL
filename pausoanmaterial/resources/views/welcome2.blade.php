@@ -53,7 +53,6 @@
 						        <li><a class="nav-link" href="{{ route('register') }}">Register</a></li>             
                             	@endif
 								@endauth
-						
 						@endif
 
 					</ul>

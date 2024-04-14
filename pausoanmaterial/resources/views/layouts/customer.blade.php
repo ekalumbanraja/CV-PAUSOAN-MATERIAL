@@ -10,12 +10,14 @@
 
   <meta name="description" content="" />
   <meta name="keywords" content="bootstrap, bootstrap4" />
-  <meta name="_token" content="{{ csrf_token() }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
 		<!-- Bootstrap CSS -->
 		<link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 		<link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
 		<link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2I3rH1nWBluq0CzjggGDxxHk7ETJnM6fJoln44zR2wsxJ9fvvjRl4NaybfBmzJMIcP90nB2HwvntgYjQqIgOXA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 		<title>PausoanMaterial</title>
 	</head>
@@ -30,8 +32,11 @@
     font-size: 14px;
     color: #666; /* warna yang sesuai dengan desain Anda */
 }
+
 </style>
-	<body>
+@yield('css');
+
+<body>
 
 		<!-- Start Header/Navigation -->
 		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
@@ -53,6 +58,11 @@
 						<li><a class="nav-link" href="services.html">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
+						<li><a class="nav-link" href="{{ url('cart') }}">
+							<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+						  </a>
+						</li>
+						  
                     
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						{{-- <li><a ></a></li> --}}

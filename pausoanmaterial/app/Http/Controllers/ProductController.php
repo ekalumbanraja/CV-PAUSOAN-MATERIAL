@@ -33,7 +33,7 @@ class ProductController extends Controller
        $product->stok = $request->stok;
        $product->description = $request->description;
        $product->price = $request->price;
-    
+       $product->sku = 'brg_' . uniqid();
        // Validasi input gambar
        $request->validate([
            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',

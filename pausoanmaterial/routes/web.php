@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
  
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Customer;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\GuestController;
 
@@ -24,9 +25,9 @@ Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
 
 Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
 
-Route::post('/checkout', [GuestController::class, 'checkout'])->name('checkout');
+Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
 
-
+// Route::post('/add-to-cart-single', [Customer::class, 'addToCartSingle'])->name('addToCartSingle');
 
    
 /* NORMAL USER */
@@ -36,6 +37,22 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
    
+Route::middleware(['auth', 'user-access:user'])->group(function () {
+
+    Route::get('/cart',  [Customer::class, 'cart'])->name('cart');
+});
+Route::middleware(['auth', 'user-access:user'])->group(function () {
+
+Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartItem');
+
+});
+Route::middleware(['auth', 'user-access:user'])->group(function () {
+
+Route::delete('/cart/{id}', [Customer::class, 'delete'])->name('cart.delete');
+
+});
+
+
 /* ADMIN */
 
 //CATEGORY 
