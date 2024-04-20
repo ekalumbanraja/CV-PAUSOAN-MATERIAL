@@ -27,6 +27,7 @@ Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.sh
 
 Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
 
+
 // Route::post('/add-to-cart-single', [Customer::class, 'addToCartSingle'])->name('addToCartSingle');
 
    
@@ -47,10 +48,12 @@ Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartIte
 
 });
 Route::middleware(['auth', 'user-access:user'])->group(function () {
-
-Route::delete('/cart/{id}', [Customer::class, 'delete'])->name('cart.delete');
-
+    Route::delete('/cart/{id}', [Customer::class, 'delete'])->name('cart.delete');
 });
+
+Route::middleware(['auth', 'user-access:admin'])->group(function () {
+    Route::post('/checkout', [Customer::class, 'checkout'])->name('checkout');
+}); 
 
 
 /* ADMIN */
@@ -74,6 +77,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/deletecategory/{id}', [AdminController::class, 'deletecategory'])->name('deletecategory');
 }); 
+
+
 
 
 //PRODUK 

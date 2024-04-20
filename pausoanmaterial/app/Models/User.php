@@ -47,4 +47,9 @@ class User extends Authenticatable
             get: fn ($value) =>  ["user","admin", "manager"][$value],
         );
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    
 }

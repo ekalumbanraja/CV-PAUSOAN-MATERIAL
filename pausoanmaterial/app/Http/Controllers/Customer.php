@@ -4,6 +4,7 @@
     use Illuminate\Http\Request;
     use App\Models\Cart;
     use App\Models\Product;
+    use App\Models\Order;
     use Illuminate\Support\Facades\Auth;
 
     class Customer extends Controller
@@ -73,20 +74,22 @@
                 // Jika produk ditemukan, tambahkan gambar produk dan nama kategori ke dalam objek keranjang belanja
                 if ($product) {
                     $cartItem->categoryName = $product->category->category_name; // Ambil nama kategori dari relasi
-                    $cartItem->productPrice = $product->price;
-                    $totalPrice += ($product->price * $cartItem->stok);
-                    
+                    $cartItem->productPrice = $product->price; // Harga per unit
+                    $cartItem->price = $product->price * $cartItem->stok; // Total harga untuk item ini
+                    $totalPrice += $cartItem->price; // Menghitung total harga
                 } else {
                     // Jika produk tidak ditemukan, set gambar produk dan nama kategori menjadi null
                     $cartItem->categoryName = null;
-                    
                     $cartItem->productPrice = null;
+                    $cartItem->price = null;
                 }
             }
+            
+            
             $totalPriceIDR = number_format($totalPrice, 0, ',', '.');
             
             // Kirim data ke tampilan
-            return view('customer.cart', ['cartItems' => $cartItems, 'totalPriceIDR' => $totalPriceIDR]);
+            return view('customer.cart', compact('cartItems', 'totalPriceIDR', 'totalPrice'));
         }
         
         
@@ -104,6 +107,36 @@
                 return redirect()->back()->with('error', 'Item keranjang tidak ditemukan.');
             }
         }
-        
+        public function store(Request $request)
+        {
+            // Validasi request sesuai kebutuhan
+            $request->validate([
+                'quantities' => 'required|array',
+                // tambahkan validasi lainnya sesuai kebutuhan
+            ]);
+    
+            // Buat pesanan baru
+            $order = new Order();
+            $order->user_id = auth()->user()->id;
+            $order->shipping_address = 'Alamat Pengiriman'; // sesuaikan dengan input yang sesuai
+            $order->order_date = now();
+            $order->save();
+    
+            // Simpan setiap item pesanan ke dalam database
+            foreach ($request->quantities as $index => $quantity) {
+                $item = $cartItems[$index]; // asumsikan $cartItems adalah variable yang berisi item keranjang belanja
+                $orderItem = new OrderItem();
+                $orderItem->user_id = auth()->user()->id;
+                $orderItem->order_id = $order->id;
+                $orderItem->product_id = $item->product_id;
+                $orderItem->quantity = $quantity;
+                $orderItem->price = $item->price;
+                $orderItem->save();
+            }
+    
+            // Lakukan proses selanjutnya seperti pengurangan stok barang, pengiriman email konfirmasi, dll.
+    
+            // Redirect atau kembalikan respon yang sesuai
+        }
 
     }
