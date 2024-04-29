@@ -1,5 +1,4 @@
 <?php 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idUser');
             $table->unsignedBigInteger('id_barang');
             $table->unsignedInteger('stok');
-            $table->decimal('price', 8, 2); // Harga produk per item
+            $table->decimal('price', 40, 2);
             $table->timestamps();
 
             // Menambahkan foreign key ke tabel users

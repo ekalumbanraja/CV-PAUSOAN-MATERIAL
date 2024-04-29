@@ -1,17 +1,31 @@
 @extends('layouts.customer')
 
 @section('content')
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Cart</h1>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                
+            </div>
+        </div>
+    </div>
+</div>
     @if ($cartItems->isEmpty())
         <div class="container px-3 my-5 clearfix">
             <p>Keranjang belanja Anda kosong.</p>
         </div>
     @else
-        <form action="#" method="POST" id="cartForm">
-            @csrf
+        {{-- <form action="#" method="POST" id="cartForm">
+            @csrf --}}
             <div class="card">
-                <div class="card-header">
+                {{-- <div class="card-header">
                     <h2>Shopping Cart</h2>
-                </div>
+                </div> --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered m-0">
@@ -26,18 +40,31 @@
                             </thead>
                             <tbody>
                                 @foreach ($cartItems as $item)
-                                    <tr>
-                                        <td class="text-right font-weight-semibold align-middle p-4">{{ $item->product->product_name }}</td>
-                                        <td class="text-right font-weight-semibold align-middle p-4">Rp.{{ number_format($item->productPrice,0, ',', '.') }}</td>
-                                        <td class="align-middle p-4">
-                                            <input type="number" id="quantity_{{ $item->id }}" name="quantities[]" class="form-control text-center quantity" value="{{ $item->stok }}" min="1" max="{{ $item->product->stok }}">
-                                        </td>
-                                        <td class="text-right font-weight-semibold align-middle p-4">Rp.{{ number_format($item->price, 0, ',', '.') }}</td>
-                                        <td class="text-center align-middle px-0">
-                                            <a href="{{ route('cart.delete', $item->id) }}" class="close float-none text-danger remove-product" title="Remove">×</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <tr>
+                                    <td class="text-right font-weight-semibold align-middle p-4">{{ $item->product->product_name }}</td>
+                                    <td class="text-right font-weight-semibold align-middle p-4">Rp.{{ number_format($item->productPrice,0, ',', '.') }}</td>
+                                    <td class="align-middle p-4">
+                                        <form action="{{ route('products.decrement', ['id' => $item->id]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="quantity-btn">-</button>
+                                        </form>
+                                        <p class="quantity-text" min="1" max="{{ $item->product->stok }}">{{ $item->stok }}</p>
+                                        <form action="{{ route('products.increment', ['id' => $item->id]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="quantity-btn">+</button>
+                                        </form>
+                                        
+                                    </td>                                    
+                                    <td class="text-right font-weight-semibold align-middle p-4">Rp.{{ number_format($item->price, 0, ',', '.') }}</td>
+                                    <td class="text-center align-middle px-0">
+                                        <form action="{{ route('cart.remove', ['id' => $item->id]) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Remove"><i class="fas fa-times"></i></button>
+                                        </form>                                            
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -49,16 +76,23 @@
                         </div>
                     </div>
                     <div class="text-right mt-4">
-                        <button type="submit" class="btn btn-lg btn-primary mt-2">Checkout</button>
+                        <div class="text-right mt-4">
+                            <div class="text-center mt-4">
+                                {{-- <form action="{{ route('checkout') }}" method="GET"> --}}
+                                    {{-- <button type="submit" class="btn btn-primary">Proceed To Checkout</button> --}}
+                                {{-- </form> --}}
+                                <a type="submit" class="btn btn-primary" href="{{ route('checkout') }}">Proceed To Checkout</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </form>
+        {{-- </form> --}}
     @endif
 @endsection
 @section('script')
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     var quantities = document.querySelectorAll('.quantity');
     quantities.forEach(function(quantity) {
         quantity.addEventListener('change', function() {
@@ -81,16 +115,6 @@
         document.getElementById('totalPrice').innerHTML = '<strong>' + formatRupiah(total) + '</strong>'; // Memformat total sebagai Rupiah
     }
 
-    // Function to handle product removal
-    var removeButtons = document.querySelectorAll('.remove-product');
-    removeButtons.forEach(function(button) {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
-            var row = this.closest('tr');
-            row.remove();
-            updateTotalPrice();
-        });
-    });
 
     // Call updateTotalPrice function when the page loads
     updateTotalPrice();
@@ -110,6 +134,8 @@ function formatRupiah(angka) {
     }
     return 'Rp ' + rupiah.split('', rupiah.length - 1).reverse().join('');
 }
+
+
 
 </script>
 @endsection

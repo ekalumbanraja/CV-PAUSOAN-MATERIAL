@@ -22,17 +22,25 @@
 		<title>PausoanMaterial</title>
 	</head>
 <style>
+	
+    .cart-icon {
+        text-color: red; /* Mengatur warna ikon menjadi merah */
+        text-align: center; /* Mengatur teks ke tengah */
+    }
 	.price {
     font-size: 18px;
     font-weight: bold;
     color: #3B5D50; /* warna yang sesuai dengan desain Anda */
-}
+		}
 
-.unit {
-    font-size: 14px;
-    color: #666; /* warna yang sesuai dengan desain Anda */
-}
+		.unit {
+			font-size: 14px;
+			color: #666; /* warna yang sesuai dengan desain Anda */
+		}
 
+		a{
+			text-decoration: none
+		}
 </style>
 @yield('css');
 
@@ -54,7 +62,7 @@
 							<a class="nav-link" href="/">Home</a>
 						</li>
 						<li><a class="nav-link" href="/shop">Shop</a></li>
-						<li><a class="nav-link" href="about.html">About us</a></li>
+						<li><a class="nav-link" href="/aboutus">About us</a></li>
 						<li><a class="nav-link" href="services.html">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
@@ -62,13 +70,17 @@
 							<i class="fa fa-shopping-cart" aria-hidden="true"></i>
 						  </a>
 						</li>
+					<li><a class="nav-link" href="{{ url('transaction') }}">
+							<i class="fa-solid fa-cash-register"></i>
+							  </a>
+						</li>
+
 						  
                     
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						{{-- <li><a ></a></li> --}}
 						{{-- <li><a class="nav-link" href="cart.html"><img src="{{ asset('asset/images/cart.svg') }}"></a></li> --}}
                         @if (Route::has('login'))
-							
 								@auth
 									<a href="{{ url('/home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
 								@else
@@ -126,7 +138,7 @@
 		
 				<div class="row g-5 mb-5">
 					<div class="col-lg-4">
-						<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
+						<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Pausoan <span>Material</span></a></div>
 						<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant</p>
 		
 						<ul class="list-unstyled custom-social">
@@ -137,17 +149,16 @@
 						</ul>
 					</div>
 		
-					<div class="col-lg-8">
+					{{-- <div class="col-lg-8">
 						<div class="row links-wrap">
 							<div class="col-6 col-sm-6 col-md-3">
 								<ul class="list-unstyled">
-									<li><a href="dokumentacija.pdf" target="_blank" style="font-size:20px">Dokumentacija</a></li>
-		
+									<li><a href="dokumentacija.pdf" target="_blank" style="font-size:20px">ekalumbanraja4</a></li>
 								</ul>
 							</div>
 		
 						</div>
-					</div>
+					</div> --}}
 		
 				</div>
 		
@@ -179,6 +190,35 @@
 
 		<script src="{{ asset('asset/js/custom.js') }}"></script>
 		@yield('script')
+		<script>
+			// Dapatkan elemen tombol keranjang belanja
+			var cartButton = document.querySelector('.nav-link[href="{{ url('cart') }}"]');
+		
+			// Perbarui tampilan jumlah item saat halaman dimuat
+			window.onload = function() {
+				updateCartItemCount();
+			};
+		
+			// Fungsi untuk mengambil jumlah item dari keranjang belanja
+			function getCartItemCount() {
+				// Ganti dengan cara Anda untuk mendapatkan jumlah item dari keranjang belanja, misalnya dari server atau local storage
+				// Misalnya, jika menggunakan localStorage:
+				var itemCount = localStorage.getItem('cartItemCount');
+				// Jika tidak ada jumlah item yang tersimpan, atur menjadi 0
+				if (!itemCount) {
+					itemCount = 0;
+				}
+				return parseInt(itemCount); // Mengonversi ke tipe integer
+			}
+		
+			// Fungsi untuk memperbarui tampilan jumlah item dalam keranjang
+			function updateCartItemCount() {
+				var itemCount = getCartItemCount();
+				// Ganti ikon keranjang dengan angka jumlah item
+				cartButton.innerHTML = '<i class="fa fa-shopping-cart cart-icon" aria-hidden="true"></i> ' + itemCount;
+			}
+		</script>
+		
 
 		
 		

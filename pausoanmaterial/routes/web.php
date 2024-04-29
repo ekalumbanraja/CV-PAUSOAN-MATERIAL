@@ -22,10 +22,9 @@ Route::get('', function () {
 
 
 Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
-
 Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
-
 Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
+Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');
 
 
 // Route::post('/add-to-cart-single', [Customer::class, 'addToCartSingle'])->name('addToCartSingle');
@@ -36,24 +35,22 @@ Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
 Route::middleware(['auth', 'user-access:user'])->group(function () {
    
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-});
-   
-Route::middleware(['auth', 'user-access:user'])->group(function () {
-
     Route::get('/cart',  [Customer::class, 'cart'])->name('cart');
-});
-Route::middleware(['auth', 'user-access:user'])->group(function () {
-
-Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartItem');
-
-});
-Route::middleware(['auth', 'user-access:user'])->group(function () {
+    Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartItem');
     Route::delete('/cart/{id}', [Customer::class, 'delete'])->name('cart.delete');
+    Route::get('/checkout', [Customer::class, 'checkout'])->name('checkout');
+    Route::delete('/cart/{id}', [Customer::class, 'removeFromCart'])->name('cart.remove');
+    Route::post ('/process',[Customer::class, 'process'])->name('process');
+    Route::put('/cart/update/{id}', [Customer::class, 'update'])->name('cart.update');
+    Route::post('/products/{id}/decrement', [Customer::class,'decrementQuantity'])->name('products.decrement');
+    Route::post('/products/{id}/increment', [Customer::class, 'incrementQuantity'])->name('products.increment');
+    Route::post('/place-order', [Customer::class, 'placeorder'])->name('place-order');
+    Route::get('/transaction', [Customer::class, 'transaction'])->name('transaction');
+
+
 });
 
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
-    Route::post('/checkout', [Customer::class, 'checkout'])->name('checkout');
-}); 
+
 
 
 /* ADMIN */
@@ -63,49 +60,21 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
-});
-
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/category', [AdminController::class, 'index'])->name('category');
-});
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/category/tampilcategory', [AdminController::class, 'tampilcategory'])->name('tampil_category');
-}); 
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/category/tambahcategory', [AdminController::class, 'tambahcategory'])->name('tambah_category');
-}); 
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/deletecategory/{id}', [AdminController::class, 'deletecategory'])->name('deletecategory');
-}); 
-
-
-
-
-//PRODUK 
-
-Route::middleware(['auth','user-access:admin'])->group(function () {
-   
+    //PRODUK 
     Route::get('/admin/product', [ProductController::class, 'index'])->name('admin.Product');
-});
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/tampilproduct', [ProductController::class, 'tampilproduct'])->name('tampil_product');
-});
-
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/product/tambahproduct', [ProductController::class, 'tambahproduct'])->name('tambah_product');
-}); 
-
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/editproduct/{id}', [ProductController::class, 'editproduct'])->name('edit_product');
-}); 
-
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/product/updateproduct/{id}', [ProductController::class, 'updateproduct'])->name('update_product');
-}); 
-
-Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/deleteproduct/{id}', [ProductController::class, 'deleteproduct'])->name('delete_product');
-}); 
+
+
+
+});
 
 
 

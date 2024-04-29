@@ -19,7 +19,7 @@
                     $table->string('stok')->nullable();
                     $table->string('image')->nullable();
                     $table->string('description')->nullable();
-                    $table->string('price')->nullable();
+                    $table->decimal('price', 40, 2)->nullable();
                     $table->timestamps();
             
                     // Menambahkan constraint foreign key ke kolom category_id

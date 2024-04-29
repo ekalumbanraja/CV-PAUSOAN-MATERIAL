@@ -34,4 +34,8 @@ class GuestController extends Controller
         // Redirect kembali ke halaman sebelumnya atau halaman sukses pembelian
         return redirect()->back()->with('success', 'Pembelian berhasil dilakukan!');
     }
+
+    public function aboutus(){
+        return view('aboutus');
+    }
 }

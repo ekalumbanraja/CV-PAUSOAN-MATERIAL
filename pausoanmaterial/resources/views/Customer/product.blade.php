@@ -22,7 +22,8 @@
                         <select name="category_id">
                             <option value="">Semua Kategori</option>
                             @foreach($categories as $category)
-                               	</option>
+							<option value="{{ $category->id }}">{{ $category->category_name }}</option>
+						</option>
                             @endforeach
                         </select>
                         <button type="submit">Filter</button>
@@ -37,20 +38,23 @@
             @foreach($products as $index => $item)
             <div class="col-12 col-md-4 col-lg-3 mb-5">
                 <div class="product-item">
+					<a href="{{ route('product.show',$item->id) }}" > 
+						
                     <img src="{{ asset('images/' . $item->image) }}" class="img-fluid product-thumbnail">
                     <h3 class="product-title">{{ $item->product_name }}</h3>
-                    <strong class="product-price">{{ $item->price }}</strong>
-					<form action="" method="POST">
+					<strong class="product-price">Rp.{{ number_format($item->price, 0, ',', '.') }}</strong>
+
+					{{-- <form action="" method="POST">
 						@csrf
 						<button type="submit" class="icon-cross addToCart">
 							<img src="{{ asset('asset/images/cross.svg') }}" class="img-fluid">
 						</button>
-					</form>
+					</form> --}}
 					
 					
-					<a href="{{ route('product.show',$item->id) }}" class="icon-crosss"> 
+					{{-- <a href="{{ route('product.show',$item->id) }}" class="icon-crosss"> 
 						<i class="fa-solid fa-magnifying-glass"></i>
-					</a>
+					</a> --}}
 						<div id="productModal" class="modal fade" tabindex="-1" role="dialog">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
@@ -61,16 +65,14 @@
 										</button>
 									</div>
 									<div class="modal-body" id="productModalBody">
-										<!-- Detail produk akan dimuat di sini -->
 									</div>
+									
 								</div>
 							</div>
 						</div>
-						
-						
-						<!-- Tambahkan tombol View dengan link ke halaman detail produk -->
-					</div>
+					</a>
 				</div>
+			</div>
 				@endforeach
 							
 				

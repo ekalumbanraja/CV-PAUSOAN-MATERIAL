@@ -6,6 +6,8 @@
     use App\Models\Product;
     use App\Models\Order;
     use Illuminate\Support\Facades\Auth;
+    use App\Models\OrderItem;
+
 
     class Customer extends Controller
     {
@@ -92,51 +94,176 @@
             return view('customer.cart', compact('cartItems', 'totalPriceIDR', 'totalPrice'));
         }
         
-        
-        public function delete($id)
+        public function update(Request $request, $id)
         {
+            // Ambil data yang diperlukan dari permintaan
+            $qty = (int)$request->input('qty');
+
             // Temukan item keranjang berdasarkan ID
             $cartItem = Cart::find($id);
-        
-            // Periksa apakah item keranjang ditemukan
-            if ($cartItem) {
-                // Hapus item keranjang
-                $cartItem->delete();
-                return redirect()->back()->with('success', 'Item keranjang berhasil dihapus.');
-            } else {
+
+            // Pastikan item keranjang ditemukan
+            if (!$cartItem) {
                 return redirect()->back()->with('error', 'Item keranjang tidak ditemukan.');
             }
-        }
-        public function store(Request $request)
-        {
-            // Validasi request sesuai kebutuhan
-            $request->validate([
-                'quantities' => 'required|array',
-                // tambahkan validasi lainnya sesuai kebutuhan
-            ]);
-    
-            // Buat pesanan baru
-            $order = new Order();
-            $order->user_id = auth()->user()->id;
-            $order->shipping_address = 'Alamat Pengiriman'; // sesuaikan dengan input yang sesuai
-            $order->order_date = now();
-            $order->save();
-    
-            // Simpan setiap item pesanan ke dalam database
-            foreach ($request->quantities as $index => $quantity) {
-                $item = $cartItems[$index]; // asumsikan $cartItems adalah variable yang berisi item keranjang belanja
-                $orderItem = new OrderItem();
-                $orderItem->user_id = auth()->user()->id;
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $item->product_id;
-                $orderItem->quantity = $quantity;
-                $orderItem->price = $item->price;
-                $orderItem->save();
+
+            // Periksa apakah jumlah yang diminta valid
+            if ($qty <= 0 || $qty > $cartItem->product->stok) {
+                return redirect()->back()->with('error', 'Jumlah tidak valid atau stok tidak mencukupi.');
             }
-    
-            // Lakukan proses selanjutnya seperti pengurangan stok barang, pengiriman email konfirmasi, dll.
-    
-            // Redirect atau kembalikan respon yang sesuai
+
+            // Update jumlah item keranjang
+            $cartItem->stok = $qty;
+            $cartItem->save();
+
+            return redirect()->back()->with('success', 'Keranjang belanja berhasil diperbarui.');
         }
 
-    }
+        public function removeFromCart($id)
+        {
+            $cartItem = Cart::find($id);
+            
+            if (!$cartItem) {
+                return redirect()->back()->with('error', 'Item not found in cart.');
+            }
+            
+            $cartItem->delete();
+            
+            return redirect()->back()->with('success', 'Item removed from cart successfully.');
+        }
+        public function checkout() {
+            // Mengambil data keranjang belanja pengguna yang sedang masuk
+            $user = Auth::user();
+            $cartItems = Cart::where('idUser', $user->id)->get();
+
+            // return view('customer.checkout');
+            return view('customer.checkout', compact('cartItems'));
+        }
+        
+        
+
+        public function process(Request $request)
+        {
+            // Validasi data checkout
+            $request->validate([
+                // Tambahkan validasi sesuai kebutuhan
+            ]);
+        
+            // Buat pesanan baru
+            $order = new Order();
+            // Tambahkan informasi pesanan ke dalam model Order
+            $order->user_id = auth()->id();
+            $order->total_price = $request->total_price; // Tambahkan total harga dari formulir
+            // Tambahkan informasi lainnya sesuai kebutuhan
+            $order->save();
+        
+            // Simpan setiap item dari keranjang belanja ke dalam pesanan
+            foreach ($request->input('product_id') as $key => $productId) {
+                $orderItem = new OrderItem();
+                $orderItem->order_id = $order->id;
+                $orderItem->product_id = $productId;
+                $orderItem->quantity = $request->input('quantity')[$key];
+                // Tambahkan informasi item lainnya jika diperlukan
+                $orderItem->save();
+            }
+        
+            // Clear keranjang belanja setelah checkout
+            Cart::where('user_id', auth()->id())->delete(); // Hapus semua item keranjang milik pengguna yang sedang login
+        
+            // Redirect pengguna ke halaman konfirmasi pesanan
+            return redirect()->route('confirmation')->with('success', 'Pesanan Anda telah berhasil diproses. Terima kasih!');
+        }
+    
+
+            public function incrementQuantity($id)
+            {
+                $cartItem = Cart::find($id);
+                if (!$cartItem) {
+                    return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+                }
+            
+                if ($cartItem->stok > 1) {
+                    $cartItem->stok++;
+                    $cartItem->save();
+                }
+                else {
+                    return redirect()->back()->with('error', 'Pemesanan Tidak Boleh 0.');
+                }
+            return redirect()->back();
+
+            }
+            
+        public function decrementQuantity($id)
+            {
+                $cartItem = Cart::find($id);
+                if (!$cartItem) {
+                    return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+                }
+            
+                if ($cartItem->stok > 1) {
+                    $cartItem->stok--;
+                    $cartItem->save();
+                }
+                else {
+                    return redirect()->back()->with('error', 'Pemesanan Tidak Boleh 0.');
+                }
+            
+                return redirect()->back();
+            }
+
+            public function placeorder(Request $request)
+            {
+                $user = Auth::user();
+                
+                $validatedData = $request->validate([
+                    'recipient_name' => 'required|string',
+                    'address' => 'required|string',
+                    'city' => 'required|string',
+                    'kodepos' => 'required|string',
+                    'phone' => 'required|string',
+                    'total_price' => 'required|numeric',
+                    'catatan' => 'required|string',
+                    'id_barang' => 'required|array',
+                    'id_barang.*' => 'exists:products,id',
+                    'namaproduk' => 'required|array',
+                    'namaproduk.*' => 'string',
+                ]);
+            
+                // Simpan data ke dalam database
+                $totalPrice = $validatedData['total_price'];
+                $idBarangArray = [];
+                $namaProdukArray = [];
+            
+                foreach($validatedData['id_barang'] as $index => $idBarang) {
+                    $idBarangArray[] = $idBarang;
+                    $namaProdukArray[] = $validatedData['namaproduk'][$index];
+                }
+            
+                $order = new Order();
+                $order->user_id = $user->id;
+                $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
+                $order->namaproduk = json_encode($namaProdukArray); // Simpan array ke dalam kolom JSON
+                $order->recipient_name = $validatedData['recipient_name'];
+                $order->address = $validatedData['address'];
+                $order->city = $validatedData['city'];
+                $order->kodepos = $validatedData['kodepos'];
+                $order->phone = $validatedData['phone'];
+                $order->total_price = $totalPrice;
+                $order->catatan = $validatedData['catatan'];
+                $order->status = 'pending';
+                $order->payment_method = $request->input('payment_method');
+                $order->save();
+            
+                // Hapus item dari keranjang belanja setelah order berhasil ditempatkan
+                Cart::where('idUser', $user->id)->delete();
+                return redirect()->route('transaction')->with('success', 'Order successfully placed!');
+            }
+            public function transaction(){
+                $user = Auth::user();
+
+                $orders = Order::where('user_id', $user->id)->get();
+                return view('Customer.transaction',compact('orders'));
+            }
+    }   
+
+ 
