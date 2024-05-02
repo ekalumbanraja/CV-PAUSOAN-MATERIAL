@@ -5,6 +5,8 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+
+
 class GuestController extends Controller
 {
     public function shop(Request $request)
@@ -37,5 +39,9 @@ class GuestController extends Controller
 
     public function aboutus(){
         return view('aboutus');
+    }
+
+    public function index(){
+        return view('Customer.home');
     }
 }

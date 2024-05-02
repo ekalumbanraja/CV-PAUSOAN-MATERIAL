@@ -31,34 +31,34 @@
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="recipient_name" class="text-black">Nama Penerima<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="recipient_name" name="recipient_name">
+                <input type="text" class="form-control" id="recipient_name" name="recipient_name" required>
               </div>
             </div>
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="address" class="text-black">Alamat<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Street address">
+                <input type="text" class="form-control" id="address" name="address" placeholder="Street address" required>
               </div>
             </div>
             <div class="form-group row">
               <div class="col-md-6">
                 <label for="city" class="text-black">Kota<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="city" name="city">
+                <input type="text" class="form-control" id="city" name="city" required>
               </div>
               <div class="col-md-6">
                 <label for="kodepos" class="text-black">Kode Pos <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="kodepos" name="kodepos">
+                <input type="text" class="form-control" id="kodepos" name="kodepos" required>
               </div>
             </div>
             <div class="form-group row mb-5">
               <div class="col-md-12">
                 <label for="phone" class="text-black">No Handphone <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number"required>
               </div>
             </div>
             <div class="form-group">
               <label for="catatan" class="text-black">Catatan tambahan</label>
-              <input type="text" class="form-control" id="catatan" name="catatan" placeholder="CATATAN">
+              <input type="text" class="form-control" id="catatan" name="catatan" placeholder="CATATAN"required>
               
               {{-- <textarea name="catatan" id="catatan" cols="30" rows="5" class="form-control" placeholder="Write your notes here..."></textarea> --}}
             </div>

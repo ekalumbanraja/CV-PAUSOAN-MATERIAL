@@ -23,8 +23,8 @@
                 $table->string('city');
                 $table->string('phone');
                 $table->string('catatan');
-                $table->string('status')->default('pending');
-                $table->string('payment_method')->nullable();
+                $table->enum('status', ['unpaid', 'paid'])->default('unpaid');
+                $table->string('snap_token');
                 $table->timestamps();
 
                 // Menambahkan foreign key ke tabel users

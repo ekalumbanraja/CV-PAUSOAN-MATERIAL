@@ -1,4 +1,3 @@
-
 @extends('layouts.customer')
 
 @section('content')
@@ -73,12 +72,7 @@
 					</a>
 				</div>
 			</div>
-				@endforeach
-							
-				
-							
-				
-				
+				@endforeach				
 			</div>
 		</div>
 	</div>
@@ -88,37 +82,4 @@
 
 
 	@endsection
-		@section('script')
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-		<script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
-		<script src="{{ asset('asset/js/tiny-slider.js') }}"></script>
-		<script src="{{ asset('asset/js/custom.js') }}"></script>
-		{{-- <script>
-			$(document).ready(function() {
-				// Handle click on Add to Cart link
-				$('.addToCart').click(function(e) {
-					e.preventDefault();
-					var productId = $(this).data('product-id');
-		
-					// Kirim AJAX request ke backend untuk menambahkan produk ke keranjang belanja
-					$.ajax({
-						type: "POST", // Atur metode HTTP sesuai dengan backend Anda
-						url: "{{ route('addToCartSingle') }}", // Atur URL sesuai dengan rute backend Anda
-						data: {
-							product_id: productId,
-							qty: 1 // Set jumlah produk menjadi 1
-							// Anda juga dapat mengirim data tambahan jika diperlukan
-						},
-						success: function(response) {
-							// Tanggapan dari backend (misalnya, sukses atau gagal)
-							console.log(response);
-							// Redirect pengguna ke halaman keranjang belanja
-							window.location.href = "{{ route('cart') }}";
-						}
-					});
-				});
-			});
-		</script> --}}
-
-		@endsection
+			

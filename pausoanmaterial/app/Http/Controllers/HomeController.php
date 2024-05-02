@@ -14,10 +14,10 @@ class HomeController extends Controller
     }
  
 
-    public function index()
-    {
-        return view('Customer/home');
-    }
+    // public function index()
+    // {
+    //     return view('Customer/home');
+    // }
  
 
     public function managerHome()

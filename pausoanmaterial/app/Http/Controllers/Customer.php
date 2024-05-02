@@ -142,37 +142,37 @@
         
         
 
-        public function process(Request $request)
-        {
-            // Validasi data checkout
-            $request->validate([
-                // Tambahkan validasi sesuai kebutuhan
-            ]);
+        // public function process(Request $request)
+        // {
+        //     // Validasi data checkout
+        //     $request->validate([
+        //         // Tambahkan validasi sesuai kebutuhan
+        //     ]);
         
-            // Buat pesanan baru
-            $order = new Order();
-            // Tambahkan informasi pesanan ke dalam model Order
-            $order->user_id = auth()->id();
-            $order->total_price = $request->total_price; // Tambahkan total harga dari formulir
-            // Tambahkan informasi lainnya sesuai kebutuhan
-            $order->save();
+        //     // Buat pesanan baru
+        //     $order = new Order();
+        //     // Tambahkan informasi pesanan ke dalam model Order
+        //     $order->user_id = auth()->id();
+        //     $order->total_price = $request->total_price; // Tambahkan total harga dari formulir
+        //     // Tambahkan informasi lainnya sesuai kebutuhan
+        //     $order->save();
         
-            // Simpan setiap item dari keranjang belanja ke dalam pesanan
-            foreach ($request->input('product_id') as $key => $productId) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $productId;
-                $orderItem->quantity = $request->input('quantity')[$key];
-                // Tambahkan informasi item lainnya jika diperlukan
-                $orderItem->save();
-            }
+        //     // Simpan setiap item dari keranjang belanja ke dalam pesanan
+        //     foreach ($request->input('product_id') as $key => $productId) {
+        //         $orderItem = new OrderItem();
+        //         $orderItem->order_id = $order->id;
+        //         $orderItem->product_id = $productId;
+        //         $orderItem->quantity = $request->input('quantity')[$key];
+        //         // Tambahkan informasi item lainnya jika diperlukan
+        //         $orderItem->save();
+        //     }
         
-            // Clear keranjang belanja setelah checkout
-            Cart::where('user_id', auth()->id())->delete(); // Hapus semua item keranjang milik pengguna yang sedang login
+        //     // Clear keranjang belanja setelah checkout
+        //     Cart::where('user_id', auth()->id())->delete(); // Hapus semua item keranjang milik pengguna yang sedang login
         
-            // Redirect pengguna ke halaman konfirmasi pesanan
-            return redirect()->route('confirmation')->with('success', 'Pesanan Anda telah berhasil diproses. Terima kasih!');
-        }
+        //     // Redirect pengguna ke halaman konfirmasi pesanan
+        //     return redirect()->route('confirmation')->with('success', 'Pesanan Anda telah berhasil diproses. Terima kasih!');
+        // }
     
 
             public function incrementQuantity($id)
@@ -250,8 +250,8 @@
                 $order->phone = $validatedData['phone'];
                 $order->total_price = $totalPrice;
                 $order->catatan = $validatedData['catatan'];
-                $order->status = 'pending';
-                $order->payment_method = $request->input('payment_method');
+                // $order->status = 'pending';
+                // $order->payment_method = $request->input('payment_method');
                 $order->save();
             
                 // Hapus item dari keranjang belanja setelah order berhasil ditempatkan
@@ -264,6 +264,24 @@
                 $orders = Order::where('user_id', $user->id)->get();
                 return view('Customer.transaction',compact('orders'));
             }
-    }   
+            public function destroy($id)
+            {
+                $order = Order::findOrFail($id);
+                $order->delete();
+
+                return redirect()->route('transaction')->with('success', 'Order berhasil dihapus');
+            }
+            
+            public function process(Request $request)
+            {
+                $transaction= Transaction::create([
+                    ''
+                ])
+            }
+
+
+
+        }
+
 
  

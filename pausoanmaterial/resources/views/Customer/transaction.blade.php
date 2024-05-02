@@ -1,7 +1,44 @@
 @extends('layouts.customer')
 
-@section('content'
-)
+@section('css')
+<style>
+    .status{
+        background-color: red;
+    }
+    .btn.success {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn.success:hover {
+  background-color: #218838;
+}
+
+/* Style untuk tombol bahaya */
+.btn.danger {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn.danger:hover {
+  background-color: #c82333;
+}
+</style>
+@endsection
+
+@section('content')
 <div class="hero">
     <div class="container">
         <div class="row justify-content-between">
@@ -32,6 +69,7 @@
                   <th>Total Harga</th>
                   <th>NO HP </th>
                   <th>Status</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
 				 <tbody>
@@ -45,7 +83,16 @@
                         </td>
                         <td>{{ 'Rp ' . number_format($item->total_price, 0, ',', '.') }}</td>
                         <td>{{ $item->phone }}</td>
-                        <td><a href="#" class="btn btn-success">{{ $item->status }}</a></td>
+                        <td><a href="#" class="status">{{ $item->status }}</a></td>
+                        <td>
+                            <form action="{{ route('orders.destroy', $item->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn danger">Hapus</button>
+                            </form>
+                            <button class="btn success">Bayar</button>
+                        </td>
+                      
                       </tr>         
           @endforeach             
                 </tbody>

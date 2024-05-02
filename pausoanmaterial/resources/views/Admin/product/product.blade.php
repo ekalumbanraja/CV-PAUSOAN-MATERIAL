@@ -68,7 +68,7 @@
                                 <td><img src="{{ asset('images/' . $item->image) }}" alt="Product Image" style="max-width: 100px;"></td>
                                 <td>{{ $item->description }}</td>
                                 <td>{{ $item->category->category_name }}</td>
-                                <td>{{ $item->price }}</td>
+                                <td>Rp.{{ number_format($item->price, 0, ',', '.') }}</td>
                                 <td>
                                        <a class="btn btn-warning notika-btn-warning" href="{{ route('edit_product', ['id' => $item->id]) }}">Edit</a>
                                        <a class="btn btn-danger notika-btn-danger" href="{{ route('delete_product', ['id' => $item->id]) }}">Delete</a>

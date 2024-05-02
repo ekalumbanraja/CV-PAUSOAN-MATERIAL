@@ -16,9 +16,12 @@ Auth::routes();
 
 /* GUEST USER */
 
-Route::get('', function () {
-    return view('welcome2');
-});
+// Route::get('', function () {
+//     return view('welcome2');
+// });
+
+
+    Route::get('/', [GuestController::class, 'index'])->name('home');
 
 
 Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
@@ -32,9 +35,11 @@ Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');
    
 /* NORMAL USER */
 
+
+
 Route::middleware(['auth', 'user-access:user'])->group(function () {
    
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/cart',  [Customer::class, 'cart'])->name('cart');
     Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartItem');
     Route::delete('/cart/{id}', [Customer::class, 'delete'])->name('cart.delete');
@@ -46,8 +51,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::post('/products/{id}/increment', [Customer::class, 'incrementQuantity'])->name('products.increment');
     Route::post('/place-order', [Customer::class, 'placeorder'])->name('place-order');
     Route::get('/transaction', [Customer::class, 'transaction'])->name('transaction');
-
-
+    Route::delete('/orders/{id}', [Customer::class, 'destroy'])->name('orders.destroy');
 });
 
 
@@ -71,6 +75,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/editproduct/{id}', [ProductController::class, 'editproduct'])->name('edit_product');
     Route::post('admin/product/updateproduct/{id}', [ProductController::class, 'updateproduct'])->name('update_product');
     Route::get('admin/product/deleteproduct/{id}', [ProductController::class, 'deleteproduct'])->name('delete_product');
+    //ORDER
+    Route::get('/admin/order', [ProductController::class, 'index'])->name('admin.Product');
+
 
 
 

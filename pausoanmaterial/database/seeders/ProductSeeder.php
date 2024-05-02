@@ -17,12 +17,15 @@ class ProductSeeder extends Seeder
             'product_name' => 'PALU',
             'category_id' => '1',
             'stok' => '20',
+            'sku'=>'20',
         ]);
         
         DB::table('products')->insert([
             'product_name' => 'Batu Bata',
             'category_id' => '2',
             'stok' => '200',
+            'sku'=>'202',
+
         ]);
         
     }
