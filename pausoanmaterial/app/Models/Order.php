@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use HasFactory;
     protected $fillable = [
     'user_id',
     'shipping_address',
@@ -14,8 +15,8 @@ class Order extends Model
     'status',   
     ];
 
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+    // public function items()
+    // {
+    //     return $this->hasMany(OrderItem::class);
+    // }
 }

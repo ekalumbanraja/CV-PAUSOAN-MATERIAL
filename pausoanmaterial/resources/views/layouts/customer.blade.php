@@ -11,6 +11,9 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
 		<!-- Bootstrap CSS -->
+		<script type="text/javascript"
+		src="https://app.stg.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.clientKey') }}"></script>
 		
 		<link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">

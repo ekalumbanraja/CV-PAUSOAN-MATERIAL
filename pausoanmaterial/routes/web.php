@@ -52,6 +52,8 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::post('/place-order', [Customer::class, 'placeorder'])->name('place-order');
     Route::get('/transaction', [Customer::class, 'transaction'])->name('transaction');
     Route::delete('/orders/{id}', [Customer::class, 'destroy'])->name('orders.destroy');
+    Route::post('/orders/{id}/bayar', [Customer::class ,'bayar'])->name('orders.bayar');
+
 });
 
 

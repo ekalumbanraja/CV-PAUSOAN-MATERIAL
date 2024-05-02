@@ -272,12 +272,70 @@
                 return redirect()->route('transaction')->with('success', 'Order berhasil dihapus');
             }
             
-            public function process(Request $request)
+            // public function bayar(Request $request)
+            // {
+            //     $order = Order::create($request->all());
+            //     // Set your Merchant Server Key
+            //     \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            //     // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+            //     \Midtrans\Config::$isProduction = false;    
+            //     // Set sanitization on (default)
+            //     \Midtrans\Config::$isSanitized = true;
+            //     // Set 3DS transaction for credit card to true
+            //     \Midtrans\Config::$is3ds = true;
+
+            //     $params = array(
+            //         'transaction_details' => array(
+            //             'order_id' => $order-> id,
+            //             'gross_amount' => $order-> total_price,
+            //         ),
+            //         'customer_details' => array(
+            //             // 'first_name' => 'budi',
+            //             // 'last_name' => 'pratama',
+            //             // 'email' => 'budi.pra@example.com',
+            //             'phone' => $request->phone,
+            //         ),
+            //     );
+
+            //     $snapToken = \Midtrans\Snap::getSnapToken($params);
+            // }
+
+
+            public function bayar(Request $request, $id)
             {
-                $transaction= Transaction::create([
-                    ''
-                ])
+                // Temukan order berdasarkan ID yang diberikan
+                $order = Order::findOrFail($id);
+            
+                // Set konfigurasi Midtrans
+                \Midtrans\Config::$serverKey = config('midtrans.server_key');
+                \Midtrans\Config::$isProduction = false; // Ganti menjadi true untuk produksi
+                \Midtrans\Config::$isSanitized = true;
+                \Midtrans\Config::$is3ds = true;
+            
+                // Data transaksi
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => $order->id,
+                        'gross_amount' => $order->total_price,
+                    ),
+                    'customer_details' => array(
+                        'phone' => $order->phone,
+                    ),
+                );
+            
+                try {
+                    // Dapatkan token SNAP
+                    $snapToken = \Midtrans\Snap::getSnapToken($params);
+            
+                    // Redirect ke halaman pembayaran
+                    return redirect()->away(\Midtrans\Snap::getSnapUrl($snapToken));
+                } catch (\Exception $e) {
+                    // Tangani jika terjadi kesalahan
+                    return back()->withError($e->getMessage());
+                }
             }
+            
+
 
 
 
