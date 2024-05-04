@@ -10,11 +10,18 @@
   <meta name="keywords" content="bootstrap, bootstrap4" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
+  <script type="text/javascript"
+  src="https://app.stg.midtrans.com/snap/snap.js"
+  data-client-key="{{ config('midtrans.clientKey') }}"></script>
+
 		<!-- Bootstrap CSS -->
-		<script type="text/javascript"
+		{{-- <script type="text/javascript"
 		src="https://app.stg.midtrans.com/snap/snap.js"
-    data-client-key="{{ config('midtrans.clientKey') }}"></script>
-		
+    data-client-key="{{ config('midtrans.clientKey') }}"></script> --}}
+	
+  	
+
+   
 		<link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 		<link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
@@ -220,10 +227,12 @@
 		<!-- End Footer Section -->	
 
 
+	
 		<script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
 		<script src="{{ asset('asset/js/tiny-slider.js') }}"></script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+	
 		<script src="{{ asset('asset/js/custom.js') }}"></script>
 		@yield('script')
 		<script>
@@ -271,8 +280,10 @@
 					link.parentElement.classList.add('active');
 				}
 			});
+
+			
 		</script>
-		
+	
 
 		
 		

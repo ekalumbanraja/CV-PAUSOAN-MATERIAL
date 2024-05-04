@@ -85,15 +85,40 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-                                
                             </div>
+                            <!-- Review section -->
+
                             
 
                          
-                        </div>
+                        </div>                        
                     </div>
+                    <section class="border-top py-4">
+                        <div class="container">
+                            <h2 class="mb-4">Product Reviews</h2>
+                            
+                            <!-- Review form for logged-in users -->
+                            <!-- You can customize this form according to your needs -->
+                            <form action="{{ route('submitReview', ['product_id' => $product->id]) }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="review">Your Review:</label>
+                                    <textarea class="form-control" id="review" name="review" rows="3"></textarea>
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}"> <!-- Menambahkan input hidden untuk product_id -->
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                            </form>
+                            
+                            
+                            
+                            <!-- Display reviews -->
+                            <div class="mt-5">
+                                <h3>Recent Reviews</h3>
+                                <!-- Loop through and display recent reviews here -->
+                            </div>
+                        </div>
+                    </section>
+                    
                 </main>
             </div>
         </div>

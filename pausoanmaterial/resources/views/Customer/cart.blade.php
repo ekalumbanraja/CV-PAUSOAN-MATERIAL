@@ -15,11 +15,11 @@
         </div>
     </div>
 </div>
-    @if ($cartItems->isEmpty())
+    {{-- @if ($cartItems->isEmpty())
         <div class="container px-3 my-5 clearfix">
             <p>Keranjang belanja Anda kosong.</p>
         </div>
-    @else
+    @else --}}
         {{-- <form action="#" method="POST" id="cartForm">
             @csrf --}}
             <div class="card">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         {{-- </form> --}}
-    @endif
+    {{-- @endif --}}
 @endsection
 @section('script')
 <script>

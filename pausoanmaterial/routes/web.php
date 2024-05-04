@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Customer;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ReviewController;
+
 
 // use App\Http\Controllers\CategoryController;
 
@@ -53,6 +55,8 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/transaction', [Customer::class, 'transaction'])->name('transaction');
     Route::delete('/orders/{id}', [Customer::class, 'destroy'])->name('orders.destroy');
     Route::post('/orders/{id}/bayar', [Customer::class ,'bayar'])->name('orders.bayar');
+    Route::post('/submit-review/{product_id}', [ReviewController::class,'submitReview'])->name('submitReview');
+
 
 });
 
@@ -80,7 +84,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //ORDER
     Route::get('/admin/order', [ProductController::class, 'index'])->name('admin.Product');
 
-
+    
 
 
 });

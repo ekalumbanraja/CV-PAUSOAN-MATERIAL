@@ -211,57 +211,14 @@
                 return redirect()->back();
             }
 
-            public function placeorder(Request $request)
-            {
-                $user = Auth::user();
-                
-                $validatedData = $request->validate([
-                    'recipient_name' => 'required|string',
-                    'address' => 'required|string',
-                    'city' => 'required|string',
-                    'kodepos' => 'required|string',
-                    'phone' => 'required|string',
-                    'total_price' => 'required|numeric',
-                    'catatan' => 'required|string',
-                    'id_barang' => 'required|array',
-                    'id_barang.*' => 'exists:products,id',
-                    'namaproduk' => 'required|array',
-                    'namaproduk.*' => 'string',
-                ]);
-            
-                // Simpan data ke dalam database
-                $totalPrice = $validatedData['total_price'];
-                $idBarangArray = [];
-                $namaProdukArray = [];
-            
-                foreach($validatedData['id_barang'] as $index => $idBarang) {
-                    $idBarangArray[] = $idBarang;
-                    $namaProdukArray[] = $validatedData['namaproduk'][$index];
-                }
-            
-                $order = new Order();
-                $order->user_id = $user->id;
-                $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
-                $order->namaproduk = json_encode($namaProdukArray); // Simpan array ke dalam kolom JSON
-                $order->recipient_name = $validatedData['recipient_name'];
-                $order->address = $validatedData['address'];
-                $order->city = $validatedData['city'];
-                $order->kodepos = $validatedData['kodepos'];
-                $order->phone = $validatedData['phone'];
-                $order->total_price = $totalPrice;
-                $order->catatan = $validatedData['catatan'];
-                // $order->status = 'pending';
-                // $order->payment_method = $request->input('payment_method');
-                $order->save();
-            
-                // Hapus item dari keranjang belanja setelah order berhasil ditempatkan
-                Cart::where('idUser', $user->id)->delete();
-                return redirect()->route('transaction')->with('success', 'Order successfully placed!');
-            }
+           
             public function transaction(){
                 $user = Auth::user();
 
+
                 $orders = Order::where('user_id', $user->id)->get();
+                // $snapTokens = $orders ? $orders->snap_token : null;
+
                 return view('Customer.transaction',compact('orders'));
             }
             public function destroy($id)
@@ -272,74 +229,168 @@
                 return redirect()->route('transaction')->with('success', 'Order berhasil dihapus');
             }
             
-            // public function bayar(Request $request)
+        
+            
+            //  public function placeorder(Request $request)
             // {
+            //     $user = Auth::user();
+                
+            //     $validatedData = $request->validate([
+            //         'recipient_name' => 'required|string',
+            //         'address' => 'required|string',
+            //         'city' => 'required|string',
+            //         'kodepos' => 'required|string',
+            //         'phone' => 'required|string',
+            //         'total_price' => 'required|numeric',
+            //         'catatan' => 'required|string',
+            //         'id_barang' => 'required|array',
+            //         'id_barang.*' => 'exists:products,id',
+            //         'namaproduk' => 'required|array',
+            //         'namaproduk.*' => 'string',
+            //     ]);
+            
+            //     // Simpan data ke dalam database
+            //     $totalPrice = $validatedData['total_price'];
+            //     $idBarangArray = [];
+            //     $namaProdukArray = [];
+            
+            //     foreach($validatedData['id_barang'] as $index => $idBarang) {
+            //         $idBarangArray[] = $idBarang;
+            //         $namaProdukArray[] = $validatedData['namaproduk'][$index];
+            //     }
+            
+            //     $order = new Order();
+            //     $order->user_id = $user->id;
+            //     $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
+            //     $order->namaproduk = json_encode($namaProdukArray); // Simpan array ke dalam kolom JSON
+            //     $order->recipient_name = $validatedData['recipient_name'];
+            //     $order->address = $validatedData['address'];
+            //     $order->city = $validatedData['city'];
+            //     $order->kodepos = $validatedData['kodepos'];
+            //     $order->phone = $validatedData['phone'];
+            //     $order->total_price = $totalPrice;
+            //     $order->catatan = $validatedData['catatan'];
+            //     // $order->status = 'pending';
+            //     // $order->payment_method = $request->input('payment_method');
+            //     $order->save();
+            
+            //     // Hapus item dari keranjang belanja setelah order berhasil ditempatkan
+            //     Cart::where('idUser', $user->id)->delete();
+            //     return redirect()->route('transaction')->with('success', 'Order successfully placed!');
+            // }
+            
+
+            // public function placeorder(Request $request){
+            //     $user = Auth::user();
+
+            //     $idBarangArray = [];
+            //         $namaProdukArray = [];
+                
+            //         foreach(['id_barang'] as $index => $idBarang) {
+            //             $idBarangArray[] = $idBarang;
+            //             $namaProdukArray[] =['namaproduk'][$index];
+            //         }
+                
+    
+            //     // dd($request->all());
             //     $order = Order::create($request->all());
-            //     // Set your Merchant Server Key
-            //     \Midtrans\Config::$serverKey = config('midtrans.server_key');
-            //     // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-            //     \Midtrans\Config::$isProduction = false;    
-            //     // Set sanitization on (default)
-            //     \Midtrans\Config::$isSanitized = true;
-            //     // Set 3DS transaction for credit card to true
-            //     \Midtrans\Config::$is3ds = true;
 
-            //     $params = array(
-            //         'transaction_details' => array(
-            //             'order_id' => $order-> id,
-            //             'gross_amount' => $order-> total_price,
-            //         ),
-            //         'customer_details' => array(
-            //             // 'first_name' => 'budi',
-            //             // 'last_name' => 'pratama',
-            //             // 'email' => 'budi.pra@example.com',
-            //             'phone' => $request->phone,
-            //         ),
-            //     );
+            // \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+            // // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+            // \Midtrans\Config::$isProduction = false;
+            // // Set sanitization on (default)
+            // \Midtrans\Config::$isSanitized = true;
+            // // Set 3DS transaction for credit card to true
+            // \Midtrans\Config::$is3ds = true;
 
-            //     $snapToken = \Midtrans\Snap::getSnapToken($params);
+            // $params = array(
+            //     'transaction_details' => array(
+            //         'order_id' => $order->id,
+            //         'gross_amount' => $request->total_price,
+            //     ),
+            //     'customer_details' => array(
+            //         'user_id' => $user,
+            //         'recipient_name' => $request->recipient_name,
+            //         'address' => $request->address,
+            //         'city' => $request->city,
+            //         'kodepos' => $request->kodepos,
+            //         'phone' => $request->phone,
+            //         'catatan' => $request->catatan,
+            //         'id_barang' => $request->json_encode($idBarangArray),
+            //         'namaproduk' => $request->json_encode($namaProdukArray),
+            //     ),
+            // );
+
+            // $snapToken = \Midtrans\Snap::getSnapToken($params);
+            // dd($snapToken);
+            // return view('customer.cart',compact('snapToken'));
+
             // }
 
 
-            public function bayar(Request $request, $id)
-            {
-                // Temukan order berdasarkan ID yang diberikan
-                $order = Order::findOrFail($id);
+            public function placeorder(Request $request)
+        {
+            // Mendapatkan pengguna yang sedang login
+            // dd($request->all());
+            $user = Auth::user();
+
+            $idBarangArray = [];
+            $namaProdukArray = []; // definisikan array untuk menyimpan nama produk
             
-                // Set konfigurasi Midtrans
-                \Midtrans\Config::$serverKey = config('midtrans.server_key');
-                \Midtrans\Config::$isProduction = false; // Ganti menjadi true untuk produksi
-                \Midtrans\Config::$isSanitized = true;
-                \Midtrans\Config::$is3ds = true;
-            
-                // Data transaksi
-                $params = array(
-                    'transaction_details' => array(
-                        'order_id' => $order->id,
-                        'gross_amount' => $order->total_price,
-                    ),
-                    'customer_details' => array(
-                        'phone' => $order->phone,
-                    ),
-                );
-            
-                try {
-                    // Dapatkan token SNAP
-                    $snapToken = \Midtrans\Snap::getSnapToken($params);
-            
-                    // Redirect ke halaman pembayaran
-                    return redirect()->away(\Midtrans\Snap::getSnapUrl($snapToken));
-                } catch (\Exception $e) {
-                    // Tangani jika terjadi kesalahan
-                    return back()->withError($e->getMessage());
+            // Iterasi melalui request untuk mendapatkan id_barang dan nama_produk
+            foreach ($request->id_barang as $index => $idBarang) {
+                $idBarangArray[] = $idBarang;
+                
+                // Periksa apakah namaproduk ada dalam request sebelum memprosesnya
+                if(isset($request->namaproduk[$index])) {
+                    $namaProdukArray[] = $request->namaproduk[$index];
                 }
             }
             
+            // Simpan pesanan ke database
+            $order = new Order();
+            $order->user_id = $user->id;
+            $order->recipient_name = $request->input('recipient_name');
+            // $order->address = $request->input('address');
+            // $order->city = $request->input('city');
+            // $order->kodepos = $request->input('kodepos');
+            // $order->phone = $request->input('phone');
+            $order->total_price = $request->input('total_price');
+            $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
+            $order->namaproduk = json_encode($namaProdukArray);
+            // $order->catatan = $request->input('catatan');
+            // $order->save(); // Simpan pesanan untuk mendapatkan ID
 
+            // Konfigurasi Midtrans
+            \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+            \Midtrans\Config::$isProduction = false;
+            \Midtrans\Config::$isSanitized = true;
+            \Midtrans\Config::$is3ds = true;
 
+            // Parameter transaksi untuk Midtrans
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => rand(), // Gunakan ID pesanan yang sudah disimpan
+                    'gross_amount' => $order->total_price,
+                ),
+                'customer_details' => array(
+                    'first_name' => $order->recipient_name,
+                    'user_id' => $user->id,
+                ),
+            );
 
+            // Dapatkan token SNAP setelah menyimpan pesanan
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
 
+            // Simpan token SNAP ke dalam pesanan yang sudah ada
+            $order->snap_token = $snapToken;
+            $order->save();
+
+            // Hapus item keranjang
+            Cart::where('idUser', $user->id)->delete();
+
+            // Redirect atau tampilkan pesan sukses
+            return redirect()->route('transaction', compact('snapToken'))->with('success', 'Order placed successfully!');
         }
 
-
- 
+    }

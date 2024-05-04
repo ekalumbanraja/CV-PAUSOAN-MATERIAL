@@ -15,14 +15,14 @@
                 $table->id();
                 $table->unsignedBigInteger('user_id');
                 $table->text('id_barang');
-                $table->text('namaproduk');
+                $table->text('namaproduk')->nullable();
                 $table->decimal('total_price', 40, 2); // Total harga pesanan
                 $table->string('recipient_name');
-                $table->string('address');
-                $table->string('kodepos');
-                $table->string('city');
-                $table->string('phone');
-                $table->string('catatan');
+                $table->string('address')->nullable();
+                $table->string('kodepos')->nullable();
+                $table->string('city')->nullable();
+                $table->string('phone')->nullable();
+                $table->string('catatan')->nullable();
                 $table->enum('status', ['unpaid', 'paid'])->default('unpaid');
                 $table->string('snap_token');
                 $table->timestamps();
@@ -32,7 +32,6 @@
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
-
         /**
          * Reverse the migrations.
          */

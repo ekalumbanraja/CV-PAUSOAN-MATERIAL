@@ -6,35 +6,35 @@
         background-color: red;
     }
     .btn.success {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
 
-.btn.success:hover {
-  background-color: #218838;
-}
+    .btn.success:hover {
+        background-color: #218838;
+    }
 
-/* Style untuk tombol bahaya */
-.btn.danger {
-  background-color: #dc3545;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
+    /* Style untuk tombol bahaya */
+    .btn.danger {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
 
-.btn.danger:hover {
-  background-color: #c82333;
-}
+    .btn.danger:hover {
+        background-color: #c82333;
+    }
 </style>
 @endsection
 
@@ -62,41 +62,42 @@
     <div class="col-md-12">
         <div class="table-wrap">
             <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Nama Penerima</th>
-                  <th>Nama Barang</th>
-                  <th>Total Harga</th>
-                  <th>NO HP </th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-				 <tbody>
-            @foreach($orders as $item)
+                <thead>
                     <tr>
-                        <td>{{ $item->recipient_name }}</td>
-                        <td>
-                        @foreach(json_decode($item->namaproduk) as $productName)
-                            {{ $productName }} <br>
-                        @endforeach
-                        </td>
-                        <td>{{ 'Rp ' . number_format($item->total_price, 0, ',', '.') }}</td>
-                        <td>{{ $item->phone }}</td>
-                        <td><a href="#" class="status">{{ $item->status }}</a></td>
-                        <td>
-                            <form action="{{ route('orders.destroy', $item->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn danger">Hapus</button>
-                            </form>
-                            <button class="btn success">Bayar</button>
-                        </td>
-                      
-                      </tr>         
-          @endforeach             
+                        <th>Nama Penerima</th>
+                        <th>Nama Barang</th>
+                        <th>Total Harga</th>
+                        <th>NO HP </th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- <input type="hidden" name="snapToken" value="{{ $snapToken }}"> --}}
+                    @foreach($orders as $order)
+<tr>
+    <td>{{ $order->recipient_name }}</td>
+    <td>
+        @foreach(json_decode($order->namaproduk) as $productName)
+            {{ $productName }} <br>
+        @endforeach
+    </td>
+    <td>{{ 'Rp ' . number_format($order->total_price, 0, ',', '.') }}</td>
+    <td>{{ $order->phone }}</td>
+    <td><a href="#" class="status">{{ $order->status }}</a></td>
+    <td>
+        <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn danger">Hapus</button>
+        </form>
+        <button class="pay-button" data-snap-token="{{ $order->snap_token }}">Bayar</button>
+    </td>
+</tr>
+@endforeach
+             
                 </tbody>
-             </table>
+            </table>
         </div>
     </div>
 </div>
@@ -104,5 +105,35 @@
 
 @endsection
 
-
-
+@section('script')
+{{-- 
+<script type="text/javascript"
+src="https://app.sandbox.midtrans.com/snap/snap.js"
+data-client-key="{{ config('midtrans.clientKey') }}">
+</script> --}}
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        var payButtons = document.querySelectorAll('.pay-button');
+        payButtons.forEach(function(button) {
+            button.addEventListener('click', function () {
+                var snapToken = this.getAttribute('data-snap-token');
+                window.snap.embed(snapToken, {
+                    embedId: 'snap-container',
+                    onSuccess: function (result) {
+                        alert("payment success!"); console.log(result);
+                    },
+                    onPending: function (result) {
+                        alert("waiting for your payment!"); console.log(result);
+                    },
+                    onError: function (result) {
+                        alert("payment failed!"); console.log(result);
+                    },
+                    onClose: function () {
+                        alert('you closed the popup without finishing the payment');
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endsection
