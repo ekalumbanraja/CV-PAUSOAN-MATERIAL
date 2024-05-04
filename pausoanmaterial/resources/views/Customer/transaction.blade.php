@@ -106,34 +106,35 @@
 @endsection
 
 @section('script')
-{{-- 
-<script type="text/javascript"
-src="https://app.sandbox.midtrans.com/snap/snap.js"
-data-client-key="{{ config('midtrans.clientKey') }}">
+{{-- <script type="text/javascript"
+    src="https://app.stg.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.clientKey') }}">
 </script> --}}
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function(event) { 
-        var payButtons = document.querySelectorAll('.pay-button');
-        payButtons.forEach(function(button) {
-            button.addEventListener('click', function () {
-                var snapToken = this.getAttribute('data-snap-token');
-                window.snap.embed(snapToken, {
-                    embedId: 'snap-container',
-                    onSuccess: function (result) {
-                        alert("payment success!"); console.log(result);
-                    },
-                    onPending: function (result) {
-                        alert("waiting for your payment!"); console.log(result);
-                    },
-                    onError: function (result) {
-                        alert("payment failed!"); console.log(result);
-                    },
-                    onClose: function () {
-                        alert('you closed the popup without finishing the payment');
-                    }
-                });
+   document.addEventListener("DOMContentLoaded", function(event) { 
+    var payButtons = document.querySelectorAll('.pay-button');
+    payButtons.forEach(function(button) {
+        button.addEventListener('click', function () {
+            var snapToken = this.getAttribute('data-snap-token');
+            snap.pay(snapToken, {
+                onSuccess: function (result) {
+                    alert("Pembayaran berhasil!"); 
+                    console.log(result);
+                },
+                onPending: function (result) {
+                    alert("Menunggu pembayaran Anda!"); 
+                    console.log(result);
+                },
+                onError: function (result) {
+                    alert("Pembayaran gagal!"); 
+                    console.log(result);
+                },
+                onClose: function () {
+                    alert('Anda menutup popup tanpa menyelesaikan pembayaran');
+                }
             });
         });
     });
+});
 </script>
 @endsection

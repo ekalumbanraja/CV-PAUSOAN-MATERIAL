@@ -10,23 +10,24 @@
   <meta name="keywords" content="bootstrap, bootstrap4" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <script type="text/javascript"
-  src="https://app.stg.midtrans.com/snap/snap.js"
-  data-client-key="{{ config('midtrans.clientKey') }}"></script>
 
 		<!-- Bootstrap CSS -->
-		{{-- <script type="text/javascript"
+		<script type="text/javascript"
 		src="https://app.stg.midtrans.com/snap/snap.js"
-    data-client-key="{{ config('midtrans.clientKey') }}"></script> --}}
+    data-client-key="{{ config('midtrans.client_Key') }}"></script>
 	
   	
+	<script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('midtrans.client_id') }}"></script>
 
-   
+    {{-- <script type="text/javascript"
+    src="https://app.stg.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.clientKey') }}"></script> --}}
 		<link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+		{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> --}}
 		<link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
 		<link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2I3rH1nWBluq0CzjggGDxxHk7ETJnM6fJoln44zR2wsxJ9fvvjRl4NaybfBmzJMIcP90nB2HwvntgYjQqIgOXA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2I3rH1nWBluq0CzjggGDxxHk7ETJnM6fJoln44zR2wsxJ9fvvjRl4NaybfBmzJMIcP90nB2HwvntgYjQqIgOXA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 		<title>PausoanMaterial</title>
 	</head>
@@ -227,7 +228,6 @@
 		<!-- End Footer Section -->	
 
 
-	
 		<script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
 		<script src="{{ asset('asset/js/tiny-slider.js') }}"></script>
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
