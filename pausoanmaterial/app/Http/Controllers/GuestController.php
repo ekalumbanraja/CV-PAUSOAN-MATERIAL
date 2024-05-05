@@ -22,7 +22,8 @@ class GuestController extends Controller
     public function view($id)
     {
     $product = Product::findOrFail($id);
-    return view('customer.show', compact('product'));
+    $recentReviews = $product->reviews()->orderBy('created_at', 'desc')->take(5)->get(); // Ambil 5 ulasan terbaru
+    return view('customer.show', compact('product','recentReviews'));
     }
     public function checkout(Request $request)
     {

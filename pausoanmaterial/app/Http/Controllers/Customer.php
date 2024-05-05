@@ -139,43 +139,7 @@
             // return view('customer.checkout');
             return view('customer.checkout', compact('cartItems'));
         }
-        
-        
-
-        // public function process(Request $request)
-        // {
-        //     // Validasi data checkout
-        //     $request->validate([
-        //         // Tambahkan validasi sesuai kebutuhan
-        //     ]);
-        
-        //     // Buat pesanan baru
-        //     $order = new Order();
-        //     // Tambahkan informasi pesanan ke dalam model Order
-        //     $order->user_id = auth()->id();
-        //     $order->total_price = $request->total_price; // Tambahkan total harga dari formulir
-        //     // Tambahkan informasi lainnya sesuai kebutuhan
-        //     $order->save();
-        
-        //     // Simpan setiap item dari keranjang belanja ke dalam pesanan
-        //     foreach ($request->input('product_id') as $key => $productId) {
-        //         $orderItem = new OrderItem();
-        //         $orderItem->order_id = $order->id;
-        //         $orderItem->product_id = $productId;
-        //         $orderItem->quantity = $request->input('quantity')[$key];
-        //         // Tambahkan informasi item lainnya jika diperlukan
-        //         $orderItem->save();
-        //     }
-        
-        //     // Clear keranjang belanja setelah checkout
-        //     Cart::where('user_id', auth()->id())->delete(); // Hapus semua item keranjang milik pengguna yang sedang login
-        
-        //     // Redirect pengguna ke halaman konfirmasi pesanan
-        //     return redirect()->route('confirmation')->with('success', 'Pesanan Anda telah berhasil diproses. Terima kasih!');
-        // }
-    
-
-            public function incrementQuantity($id)
+       public function incrementQuantity($id)
             {
                 $cartItem = Cart::find($id);
                 if (!$cartItem) {
@@ -228,105 +192,6 @@
 
                 return redirect()->route('transaction')->with('success', 'Order berhasil dihapus');
             }
-            
-        
-            
-            //  public function placeorder(Request $request)
-            // {
-            //     $user = Auth::user();
-                
-            //     $validatedData = $request->validate([
-            //         'recipient_name' => 'required|string',
-            //         'address' => 'required|string',
-            //         'city' => 'required|string',
-            //         'kodepos' => 'required|string',
-            //         'phone' => 'required|string',
-            //         'total_price' => 'required|numeric',
-            //         'catatan' => 'required|string',
-            //         'id_barang' => 'required|array',
-            //         'id_barang.*' => 'exists:products,id',
-            //         'namaproduk' => 'required|array',
-            //         'namaproduk.*' => 'string',
-            //     ]);
-            
-            //     // Simpan data ke dalam database
-            //     $totalPrice = $validatedData['total_price'];
-            //     $idBarangArray = [];
-            //     $namaProdukArray = [];
-            
-            //     foreach($validatedData['id_barang'] as $index => $idBarang) {
-            //         $idBarangArray[] = $idBarang;
-            //         $namaProdukArray[] = $validatedData['namaproduk'][$index];
-            //     }
-            
-            //     $order = new Order();
-            //     $order->user_id = $user->id;
-            //     $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
-            //     $order->namaproduk = json_encode($namaProdukArray); // Simpan array ke dalam kolom JSON
-            //     $order->recipient_name = $validatedData['recipient_name'];
-            //     $order->address = $validatedData['address'];
-            //     $order->city = $validatedData['city'];
-            //     $order->kodepos = $validatedData['kodepos'];
-            //     $order->phone = $validatedData['phone'];
-            //     $order->total_price = $totalPrice;
-            //     $order->catatan = $validatedData['catatan'];
-            //     // $order->status = 'pending';
-            //     // $order->payment_method = $request->input('payment_method');
-            //     $order->save();
-            
-            //     // Hapus item dari keranjang belanja setelah order berhasil ditempatkan
-            //     Cart::where('idUser', $user->id)->delete();
-            //     return redirect()->route('transaction')->with('success', 'Order successfully placed!');
-            // }
-            
-
-            // public function placeorder(Request $request){
-            //     $user = Auth::user();
-
-            //     $idBarangArray = [];
-            //         $namaProdukArray = [];
-                
-            //         foreach(['id_barang'] as $index => $idBarang) {
-            //             $idBarangArray[] = $idBarang;
-            //             $namaProdukArray[] =['namaproduk'][$index];
-            //         }
-                
-    
-            //     // dd($request->all());
-            //     $order = Order::create($request->all());
-
-            // \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-            // // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-            // \Midtrans\Config::$isProduction = false;
-            // // Set sanitization on (default)
-            // \Midtrans\Config::$isSanitized = true;
-            // // Set 3DS transaction for credit card to true
-            // \Midtrans\Config::$is3ds = true;
-
-            // $params = array(
-            //     'transaction_details' => array(
-            //         'order_id' => $order->id,
-            //         'gross_amount' => $request->total_price,
-            //     ),
-            //     'customer_details' => array(
-            //         'user_id' => $user,
-            //         'recipient_name' => $request->recipient_name,
-            //         'address' => $request->address,
-            //         'city' => $request->city,
-            //         'kodepos' => $request->kodepos,
-            //         'phone' => $request->phone,
-            //         'catatan' => $request->catatan,
-            //         'id_barang' => $request->json_encode($idBarangArray),
-            //         'namaproduk' => $request->json_encode($namaProdukArray),
-            //     ),
-            // );
-
-            // $snapToken = \Midtrans\Snap::getSnapToken($params);
-            // dd($snapToken);
-            // return view('customer.cart',compact('snapToken'));
-
-            // }
-
 
             public function placeorder(Request $request)
         {
@@ -351,14 +216,14 @@
             $order = new Order();
             $order->user_id = $user->id;
             $order->recipient_name = $request->input('recipient_name');
-            // $order->address = $request->input('address');
-            // $order->city = $request->input('city');
-            // $order->kodepos = $request->input('kodepos');
-            // $order->phone = $request->input('phone');
+            $order->address = $request->input('address');
+            $order->city = $request->input('city');
+            $order->kodepos = $request->input('kodepos');
+            $order->phone = $request->input('phone');
             $order->total_price = $request->input('total_price');
             $order->id_barang = json_encode($idBarangArray); // Simpan array ke dalam kolom JSON
             $order->namaproduk = json_encode($namaProdukArray);
-            // $order->catatan = $request->input('catatan');
+            $order->catatan = $request->input('catatan');
             // $order->save(); // Simpan pesanan untuk mendapatkan ID
 
             // Konfigurasi Midtrans
@@ -376,21 +241,53 @@
                 'customer_details' => array(
                     'first_name' => $order->recipient_name,
                     'user_id' => $user->id,
-                ),
+                )
+                // 'Product_details'=> array(
+                //     'product_name' => $order->namaproduk,
+                // )
             );
 
-            // Dapatkan token SNAP setelah menyimpan pesanan
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+                // Dapatkan token SNAP setelah menyimpan pesanan
+                $snapToken = \Midtrans\Snap::getSnapToken($params);
 
             // Simpan token SNAP ke dalam pesanan yang sudah ada
             $order->snap_token = $snapToken;
             $order->save();
-
+    
             // Hapus item keranjang
             Cart::where('idUser', $user->id)->delete();
 
             // Redirect atau tampilkan pesan sukses
             return redirect()->route('transaction', compact('snapToken'))->with('success', 'Order placed successfully!');
+        }
+
+        // public function callback(Request $request){
+        //     $serverkey = config('midtrans.serverKey'); 
+        //     $hashed= hash("sha512",$request->order_id.$request->status_code.$request->gross_amount.$serverkey);
+        //     if($hashed=$request->signature_key){
+        //         if($request->status=='unpaid'){
+        //         $order=Order::find($request->order_id);
+        //         $order->update(['status'=>'Paid']);
+
+        //     }
+        // }
+        // }
+        public function updateOrderStatus($orderId) {
+            // Temukan pesanan berdasarkan ID
+            $order = Order::find($orderId);
+        
+            // Periksa apakah pesanan ditemukan
+            if($order) {
+                // Update status pesanan menjadi "paid"
+                $order->status = 'paid';
+                $order->save();
+        
+                // Kirim respon sukses
+                return response()->json(['message' => 'Order status updated successfully'], 200);
+            } else {
+                // Kirim respon pesanan tidak ditemukan
+                return response()->json(['message' => 'Order not found'], 404);
+            }
         }
 
     }

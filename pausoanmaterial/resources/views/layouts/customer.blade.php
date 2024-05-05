@@ -24,10 +24,10 @@
     src="https://app.stg.midtrans.com/snap/snap.js"
     data-client-key="{{ config('midtrans.clientKey') }}"></script> --}}
 		<link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
-		{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> --}}
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 		<link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
 		<link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
-		{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2I3rH1nWBluq0CzjggGDxxHk7ETJnM6fJoln44zR2wsxJ9fvvjRl4NaybfBmzJMIcP90nB2HwvntgYjQqIgOXA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-2I3rH1nWBluq0CzjggGDxxHk7ETJnM6fJoln44zR2wsxJ9fvvjRl4NaybfBmzJMIcP90nB2HwvntgYjQqIgOXA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 		<title>PausoanMaterial</title>
 	</head>
@@ -51,6 +51,8 @@
 		a{
 			text-decoration: none
 		}
+
+
 </style>
 @yield('css')
 
@@ -77,13 +79,17 @@
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
 						<li>
-								<a class="nav-link" href="{{ url('cart') }}">
+							<a class="nav-link" href="{{ url('cart') }}">
+								@php
+									$jumlah_item = \App\Models\Cart::where('idUser', Auth::id())->sum('stok');
+									@endphp
+								@if($jumlah_item > 0)
 								<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-								{{-- @if($jumlah_item > 0)
-									<span class="badge badge-pill badge-danger">{{ $jumlah_item }}</span>
-								@endif --}}
+								<span class="badge badge-pill badge-danger">{{ $jumlah_item }}</span>
+								@endif
 							</a>
 						</li>
+						
 						
 					<li><a class="nav-link" href="{{ url('transaction') }}">
 							<i class="fa-solid fa-cash-register "></i>
@@ -106,23 +112,29 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
-                            @endif
+                            @endif	
                             @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-                        
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="background-color: rgba(255, 255, 255, 0.7);">
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-size: 14px;">
-                                        {{ __('Logout') }}
-                                    </a>
-                        
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+							<li class="nav-item dropdown">
+								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+									{{ Auth::user()->name }}
+								</a>
+							
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="background-color: rgba(255, 255, 255, 0.7);">
+									<!-- Tambahkan opsi Edit Profil -->
+									<a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;">
+										{{ __('Edit Profil') }}
+									</a>
+									<!-- Akhir dari opsi Edit Profil -->
+							
+									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-size: 14px;">
+										{{ __('Logout') }}
+									</a>
+							
+									<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+										@csrf
+									</form>
+								</div>
+							</li>
                             @endguest
                             {{-- @if (Route::has('login'))
                             
@@ -235,34 +247,7 @@
 	
 		<script src="{{ asset('asset/js/custom.js') }}"></script>
 		@yield('script')
-		<script>
-			// Dapatkan elemen tombol keranjang belanja
-			var cartButton = document.querySelector('.nav-link[href="{{ url('cart') }}"]');
-		
-			// Perbarui tampilan jumlah item saat halaman dimuat
-			window.onload = function() {
-				updateCartItemCount();
-			};
-		
-			// Fungsi untuk mengambil jumlah item dari keranjang belanja
-			function getCartItemCount() {
-				// Ganti dengan cara Anda untuk mendapatkan jumlah item dari keranjang belanja, misalnya dari server atau local storage
-				// Misalnya, jika menggunakan localStorage:
-				var itemCount = localStorage.getItem('cartItemCount');
-				// Jika tidak ada jumlah item yang tersimpan, atur menjadi 0
-				if (!itemCount) {
-					itemCount = 0;
-				}
-				return parseInt(itemCount); // Mengonversi ke tipe integer
-			}
-		
-			// Fungsi untuk memperbarui tampilan jumlah item dalam keranjang
-			function updateCartItemCount() {
-				var itemCount = getCartItemCount();
-				// Ganti ikon keranjang dengan angka jumlah item
-				cartButton.innerHTML = '<i class="fa fa-shopping-cart cart-icon" aria-hidden="true"></i> ' + itemCount;
-			}
-		</script>
+
 		
 		<script>
 			// Mengambil path halaman saat ini

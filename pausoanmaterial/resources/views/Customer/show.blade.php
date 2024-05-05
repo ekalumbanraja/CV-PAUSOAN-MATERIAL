@@ -96,7 +96,7 @@
                     <section class="border-top py-4">
                         <div class="container">
                             <h2 class="mb-4">Product Reviews</h2>
-                            
+                    
                             <!-- Review form for logged-in users -->
                             <!-- You can customize this form according to your needs -->
                             <form action="{{ route('submitReview', ['product_id' => $product->id]) }}" method="POST">
@@ -114,8 +114,45 @@
                             <!-- Display reviews -->
                             <div class="mt-5">
                                 <h3>Recent Reviews</h3>
-                                <!-- Loop through and display recent reviews here -->
+                                @if($recentReviews->isEmpty())
+                                    <p>No recent reviews yet.</p>
+                                @else
+                                    <div class="row">
+                                        @foreach($recentReviews as $review)
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="media">
+                                                            <img class="mr-3 rounded-circle" src="{{ asset('user/' . $review->user->image) }}" alt="User Image" style="width: 64px; height: 64px;">
+                                                            <div class="media-body">
+                                                                <h5 class="mt-0">{{ $review->user->name }}</h5>
+                                                                <div class="rating">
+                                                                    <!-- Tampilkan bintang rating -->
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        @if($i <= $review->rating)
+                                                                            <span class="fa fa-star checked"></span>
+                                                                        @else
+                                                                            <span class="fa fa-star"></span>
+                                                                        @endif
+                                                                    @endfor
+                                                                </div>
+                                                                <p>{{ $review->content }}</p>
+                                                                <!-- Tampilkan waktu ulasan -->
+                                                                <div class="text-muted">
+                                                                    <small>{{ $review->created_at->diffForHumans() }}</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
+                            
+                            
+                            
                         </div>
                     </section>
                     

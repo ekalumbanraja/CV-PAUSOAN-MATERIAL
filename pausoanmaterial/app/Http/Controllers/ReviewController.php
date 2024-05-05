@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review; // Import model Review
+use App\Models\Order; // Import model Review
 use Illuminate\Support\Facades\Auth;
 class ReviewController extends Controller
 {
@@ -13,8 +14,9 @@ class ReviewController extends Controller
     // dd($request->all());
     $request->validate([
         'review' => 'required|string',
-        'product_id' => 'required|integer', // Pastikan product_id disertakan dalam validasi
+        'product_id' => 'required|integer|exists:products,id', // Pastikan product_id yang disubmit ada di tabel products
     ]);
+    
 
     try {
         // Mendapatkan ID pengguna yang sedang login
@@ -32,6 +34,18 @@ class ReviewController extends Controller
     } catch (\Exception $e) {
         // Tampilkan pesan kesalahan jika terjadi masalah saat menyimpan review
         return redirect()->back()->with('error', 'Failed to submit review. Please try again later.');
+    }
+}
+public function updateStatus($orderId) {
+    // Temukan pesanan berdasarkan ID
+    $order = Order::find($orderId);
+    if ($order) {
+        // Perbarui status menjadi "Paid"
+        $order->status = "Paid";
+        $order->save();
+        return response()->json(['message' => 'Status pesanan berhasil diperbarui'], 200);
+    } else {
+        return response()->json(['error' => 'Pesanan tidak ditemukan'], 404);
     }
 }
 

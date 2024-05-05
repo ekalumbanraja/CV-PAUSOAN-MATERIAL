@@ -84,7 +84,8 @@
     </td>
     <td>{{ 'Rp ' . number_format($order->total_price, 0, ',', '.') }}</td>
     <td>{{ $order->phone }}</td>
-    <td><a href="#" class="status">{{ $order->status }}</a></td>
+    <td><a href="#" class="status" id="status_{{ $order->id }}">{{ $order->status }}</a></td>
+
     <td>
         <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
             @csrf
@@ -111,7 +112,7 @@
     data-client-key="{{ config('midtrans.clientKey') }}">
 </script> --}}
 <script type="text/javascript">
-   document.addEventListener("DOMContentLoaded", function(event) { 
+  document.addEventListener("DOMContentLoaded", function(event) { 
     var payButtons = document.querySelectorAll('.pay-button');
     payButtons.forEach(function(button) {
         button.addEventListener('click', function () {
@@ -120,6 +121,7 @@
                 onSuccess: function (result) {
                     alert("Pembayaran berhasil!"); 
                     console.log(result);
+                    updateOrderStatus(result.order_id); // Panggil fungsi untuk memperbarui status
                 },
                 onPending: function (result) {
                     alert("Menunggu pembayaran Anda!"); 
@@ -135,6 +137,22 @@
             });
         });
     });
-});
+
+    function updateOrderStatus(orderId) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            // Update status di tampilan setelah berhasil diperbarui di backend
+            document.getElementById("status_" + orderId).innerText = "Paid";
+        }
+    };
+    xhttp.open("POST", "{{ route('updateStatus', '') }}/" + orderId, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+}
+
+}
+);
+
 </script>
 @endsection

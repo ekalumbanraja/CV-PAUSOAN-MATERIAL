@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('image')->nullable();
             $table->boolean('type')->default(false); //add type boolean Users: 0=>User,2=>Manager 
             $table->rememberToken();
             $table->timestamps();

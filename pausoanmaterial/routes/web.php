@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ProfileController;
 
 
 // use App\Http\Controllers\CategoryController;
@@ -28,7 +29,6 @@ Auth::routes();
 
 Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
 Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
-Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
 Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');
 
 
@@ -40,7 +40,8 @@ Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');
 
 
 Route::middleware(['auth', 'user-access:user'])->group(function () {
-   
+    
+    Route::post('/add-to-cart', [Customer::class, 'addToCart'])->name('addToCart');
     // Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/cart',  [Customer::class, 'cart'])->name('cart');
     Route::post('/update-cart-item', 'Customer@updateCartItem')->name('updateCartItem');
@@ -56,8 +57,11 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::delete('/orders/{id}', [Customer::class, 'destroy'])->name('orders.destroy');
     Route::post('/orders/{id}/bayar', [Customer::class ,'bayar'])->name('orders.bayar');
     Route::post('/submit-review/{product_id}', [ReviewController::class,'submitReview'])->name('submitReview');
+    Route::post('/update-order-status/{orderId}', [ReviewController::class,'updateStatus'])->name('updateStatus');
 
-
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    
 });
 
 
