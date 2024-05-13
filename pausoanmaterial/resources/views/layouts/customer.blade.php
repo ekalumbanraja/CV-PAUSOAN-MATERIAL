@@ -32,7 +32,48 @@
 		<title>PausoanMaterial</title>
 	</head>
 <style>
-	
+	.dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Notification item */
+.dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    clear: both;
+    font-weight: normal;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+/* Bold font for unread notifications */
+.font-weight-bold {
+    font-weight: bold;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+/* Danger badge */
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
     .cart-icon {
         text-color: red; /* Mengatur warna ikon menjadi merah */
         text-align: center; /* Mengatur teks ke tengah */
@@ -75,32 +116,56 @@
 						</li>
 						<li><a class="nav-link" href="/shop">Shop</a></li>
 						<li><a class="nav-link" href="/aboutus">About us</a></li>
-						<li><a class="nav-link" href="services.html">Services</a></li>
+						<li><a class="nav-link" href="/services">Services</a></li>
 						<li><a class="nav-link" href="blog.html">Blog</a></li>
 						<li><a class="nav-link" href="contact.html">Contact us</a></li>
-						<li>
-							<a class="nav-link" href="{{ url('cart') }}">
-								@php
-									$jumlah_item = \App\Models\Cart::where('idUser', Auth::id())->sum('stok');
-									@endphp
-								@if($jumlah_item > 0)
-								<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+					<li>
+						<a class="nav-link" href="{{ url('cart') }}">
+							<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+							@php
+								$jumlah_item = \App\Models\Cart::where('idUser', Auth::id())->count();
+							@endphp
+							@if($jumlah_item > 0)
 								<span class="badge badge-pill badge-danger">{{ $jumlah_item }}</span>
-								@endif
-							</a>
-						</li>
+							@endif
+						</a>
+					</li>
+
 						
-						
-					<li><a class="nav-link" href="{{ url('transaction') }}">
+						<li>
+						<a class="nav-link" href="{{ url('transaction') }}">
 							<i class="fa-solid fa-cash-register "></i>
 							  </a>
 						</li>
-
-						  
-                    
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-bell"></i>
+								<!-- Jika ada notifikasi, tampilkan badge -->
+								@php
+									$notificationsCount = auth()->check() ? auth()->user()->unreadNotifications->count() : 0;
+								@endphp
+								@if($notificationsCount > 0)
+									<span class="badge badge-pill badge-danger">{{ $notificationsCount }}</span>
+								@endif
+							</a>
+							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownNotification">
+								<!-- List notifikasi -->
+								@forelse(auth()->check() ? auth()->user()->notifications : [] as $notification)
+									@php
+										$unread = $notification->unread();
+									@endphp
+									<a class="dropdown-item {{ $unread ? 'font-weight-bold' : '' }}" href="#">{{ $notification->data['message'] }}</a>
+									<!-- Tandai notifikasi sebagai dibaca jika belum dibaca -->
+									@if($unread)
+										{{ $notification->markAsRead() }}
+									@endif
+								@empty
+									<a class="dropdown-item" href="#">Tidak ada notifikasi</a>
+								@endforelse
+							</div>
+						</li>
+						
 						<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-                            {{-- <li><a ></a></li> --}}
-                            {{-- <li><a class="nav-link" href="cart.html"><img src="{{ asset('asset/images/cart.svg') }}"></a></li> --}}
                             @guest
                             @if (Route::has('login'))
                             <li class="nav-item">
@@ -124,6 +189,10 @@
 									<a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;">
 										{{ __('Edit Profil') }}
 									</a>
+									<a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;">
+										{{ __('Pesanan') }}
+									</a>
+									
 									<!-- Akhir dari opsi Edit Profil -->
 							
 									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-size: 14px;">
@@ -136,18 +205,7 @@
 								</div>
 							</li>
                             @endguest
-                            {{-- @if (Route::has('login'))
-                            
-                            @auth
-                            <a href="{{ url('/home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
-                            @else
-                            <li><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                            @if (Route::has('register'))
-                            <li><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                            @endif
-                            @endauth
-                            
-                            @endif --}}
+                 
                         </ul>
                 </ul>
 
@@ -156,7 +214,6 @@
 				
 		</nav>
 		<!-- End Header/Navigation -->
-
 		<!-- Start Hero Section -->
 		@yield('content')
 			

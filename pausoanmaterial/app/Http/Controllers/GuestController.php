@@ -45,4 +45,8 @@ class GuestController extends Controller
     public function index(){
         return view('Customer.home');
     }
+
+    public function services(){
+        return view('Customer.services');
+    }
 }

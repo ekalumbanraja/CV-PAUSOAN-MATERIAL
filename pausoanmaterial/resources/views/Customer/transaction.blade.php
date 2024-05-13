@@ -39,6 +39,14 @@
 @endsection
 
 @section('content')
+<?php
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+// Kode PHP lainnya yang diperlukan
+?>
+
 <div class="hero">
     <div class="container">
         <div class="row justify-content-between">
@@ -75,27 +83,33 @@
                 <tbody>
                     {{-- <input type="hidden" name="snapToken" value="{{ $snapToken }}"> --}}
                     @foreach($orders as $order)
-<tr>
-    <td>{{ $order->recipient_name }}</td>
-    <td>
-        @foreach(json_decode($order->namaproduk) as $productName)
-            {{ $productName }} <br>
-        @endforeach
-    </td>
-    <td>{{ 'Rp ' . number_format($order->total_price, 0, ',', '.') }}</td>
-    <td>{{ $order->phone }}</td>
-    <td><a href="#" class="status" id="status_{{ $order->id }}">{{ $order->status }}</a></td>
-
-    <td>
-        <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn danger">Hapus</button>
-        </form>
-        <button class="pay-button" data-snap-token="{{ $order->snap_token }}">Bayar</button>
-    </td>
-</tr>
-@endforeach
+                    <tr>
+                        <td>{{ $order->recipient_name }}</td>
+                        <td>
+                            @foreach(json_decode($order->namaproduk) as $productName)
+                                {{ $productName }} <br>
+                            @endforeach
+                        </td>
+                        <td>{{ 'Rp ' . number_format($order->total_price, 0, ',', '.') }}</td>
+                        <td>{{ $order->phone }}</td>
+                        <td><a href="#" class="status" id="status_{{ $order->id }}">{{ $order->status }}</a></td>
+                
+                        <td>
+                            @if($order->status === 'paid')
+                                <a href="{{ route('cekPengiriman', $order->id) }}" class="btn success">Cek Pengiriman</a>
+                                <button class="btn success" onclick="printStruk({{ $order->id }})">Print Struk</button>
+                            @else
+                                <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn danger">Hapus</button>
+                                </form>
+                                <button class="pay-button" data-snap-token="{{ $order->snap_token }}">Bayar</button>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                
              
                 </tbody>
             </table>
@@ -105,8 +119,8 @@
 <br><br><br><br>
 
 @endsection
-
 @section('script')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {{-- <script type="text/javascript"
     src="https://app.stg.midtrans.com/snap/snap.js"
     data-client-key="{{ config('midtrans.clientKey') }}">
@@ -154,5 +168,8 @@
 }
 );
 
+function printStruk(orderId) {
+        window.location.href = '/print-struk/' + orderId;
+    }
 </script>
 @endsection

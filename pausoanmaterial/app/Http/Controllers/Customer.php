@@ -6,7 +6,10 @@
     use App\Models\Product;
     use App\Models\Order;
     use Illuminate\Support\Facades\Auth;
-    use App\Models\OrderItem;
+    use App\Models\Pengiriman;
+    use App\Models\HistoryPembelian;
+    use Dompdf\Dompdf;
+    use Dompdf\Options;
 
 
     class Customer extends Controller
@@ -261,33 +264,119 @@
             return redirect()->route('transaction', compact('snapToken'))->with('success', 'Order placed successfully!');
         }
 
-        // public function callback(Request $request){
-        //     $serverkey = config('midtrans.serverKey'); 
-        //     $hashed= hash("sha512",$request->order_id.$request->status_code.$request->gross_amount.$serverkey);
-        //     if($hashed=$request->signature_key){
-        //         if($request->status=='unpaid'){
-        //         $order=Order::find($request->order_id);
-        //         $order->update(['status'=>'Paid']);
+        public function callback(Request $request){
+            $serverkey = config('midtrans.serverKey'); 
+            $hashed= hash("sha512",$request->order_id.$request->status_code.$request->gross_amount.$serverkey);
+            if($hashed==$request->signature_key){
+                if($request->transaction_status=='capture'){
+                $order=Order::find($request->order_id);
+                $order->update(['status'=>'paid']);
 
-        //     }
-        // }
-        // }
-        public function updateOrderStatus($orderId) {
-            // Temukan pesanan berdasarkan ID
-            $order = Order::find($orderId);
-        
-            // Periksa apakah pesanan ditemukan
-            if($order) {
-                // Update status pesanan menjadi "paid"
-                $order->status = 'paid';
-                $order->save();
-        
-                // Kirim respon sukses
-                return response()->json(['message' => 'Order status updated successfully'], 200);
-            } else {
-                // Kirim respon pesanan tidak ditemukan
-                return response()->json(['message' => 'Order not found'], 404);
             }
         }
+        }
+       public function updateStatus(Request $request, $orderId)
+        {
+        // Validasi request
+        $request->validate([
+            'status' => 'required|in:paid' // Pastikan status yang diterima adalah 'paid'
+        ]);
 
+        // Cari pesanan berdasarkan ID
+        $order = Order::findOrFail($orderId);
+
+        // Perbarui status pesanan
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['message' => 'Status pesanan berhasil diperbarui'], 200);
+        }
+
+        // public function markAsRead($id)
+        // {
+        //     // Temukan notifikasi berdasarkan ID
+        //     $notification = Auth::user()->notifications()->findOrFail($id);
+    
+        //     // Tandai notifikasi sebagai sudah dibaca
+        //     $notification->markAsRead();
+    
+        //     // Redirect kembali ke halaman sebelumnya atau ke halaman lain yang Anda tentukan
+        //     return redirect()->back()->with('success', 'Notifikasi telah ditandai sebagai sudah dibaca.');
+        // }
+
+        public function getOrder($orderId)
+            {
+                $order = Order::find($orderId);
+
+                return response()->json($order);
+            }
+        function printReceiptPdf($orderData) {
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+        
+            $dompdf = new Dompdf($options);
+        
+            // Buat template struk dengan data pesanan yang diterima
+            $receiptContent = view('struk', compact('orderData'));
+        
+            $dompdf->loadHtml($receiptContent);
+        
+            // Atur ukuran dan orientasi halaman
+            $dompdf->setPaper('A4', 'portrait');
+        
+            // Render PDF (mengonversi view menjadi PDF)
+            $dompdf->render();
+        
+            // Keluarkan konten PDF ke browser
+            $dompdf->stream('struk_pembayaran.pdf', array('Attachment' => 0));
+        }
+    public function cekPengiriman($orderId)
+    {
+        // Ambil data pengiriman berdasarkan ID pesanan
+        $pengiriman = Pengiriman::where('order_id', $orderId)->first();
+
+    // Jika data pengiriman ditemukan, tampilkan detail pengiriman
+    if ($pengiriman) {
+        return view('customer.Pengirimandetail', compact('pengiriman'));
+    } else {
+        // Jika tidak ditemukan, tampilkan pesan error atau redirect ke halaman sebelumnya
+        return redirect()->back()->with('error', 'Pengiriman tidak ditemukan.');
     }
+    
+    }
+
+
+        public function updateDeliveryStatus($id)
+        {
+            // Cari pengiriman berdasarkan ID
+            $pengiriman = Pengiriman::findOrFail($id);
+            $order = Order::findOrFail($pengiriman->order_id);
+
+            
+            // Perbarui status pengiriman menjadi Selesai
+            $pengiriman->status = 'Selesai';
+            $pengiriman->save();
+            
+            // Dapatkan user yang sedang login
+            $user = Auth::user();
+        
+            // Salin data pengiriman ke tabel history_pembelian
+            $history = new HistoryPembelian();
+            $history->user_id = $user->id; // Ambil ID pengguna yang sedang login
+            $history->order_id = $order->id; // Gunakan ID pesanan yang terkait dengan pengiriman
+            $history->name = $order->recipient_name; // Gunakan nama penerima pengiriman
+            $history->total_price = $order->total_price;
+            $history->address = $order->address; //
+            $history->status = 'Selesai';
+            $history->save();
+            // dd($history);
+            // Hapus pesanan terkait dengan pengiriman
+            // $order->delete();
+            
+            // Redirect kembali ke halaman detail pengiriman dengan pesan sukses
+            return redirect()->route('transaction')->with('success', 'Status pengiriman berhasil diperbarui menjadi Selesai.');
+
+        }
+            
+}
