@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->enum('payment_method', ['credit_card', 'bank_transfer', 'paypal']);
+            // $table->enum('payment_method', ['credit_card', 'bank_transfer', 'paypal']);
             $table->decimal('amount', 40, 2);
             $table->dateTime('transaction_date');
             $table->enum('status', ['paid', 'pending', 'failed'])->default('pending');

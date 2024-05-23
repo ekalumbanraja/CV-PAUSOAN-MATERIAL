@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Review; // Import model Review
 use App\Models\Order; // Import model Review
 use Illuminate\Support\Facades\Auth;
+use App\Models\HistoryPembelian;
+
 class ReviewController extends Controller
 {
     public function submitReview(Request $request)
@@ -16,19 +18,16 @@ class ReviewController extends Controller
         'review' => 'required|string',
         'product_id' => 'required|integer|exists:products,id', // Pastikan product_id yang disubmit ada di tabel products
     ]);
-    
-
     try {
         // Mendapatkan ID pengguna yang sedang login
         // $user = Auth::user();
         // $userId = auth()->id();
-        // Simpan review ke dalam database
+        // Simpan review ke dalam database                                                                                      
         Review::create([
             'content' => $request->input('review'),
             'user_id' => auth()->id(),
             'product_id' => $request->input('product_id'), // Gunakan product_id dari permintaan
         ]);
-
         // Redirect atau tampilkan pesan sukses
         return redirect()->back()->with('success', 'Review submitted successfully!');
     } catch (\Exception $e) {
@@ -48,5 +47,17 @@ public function updateStatus($orderId) {
         return response()->json(['error' => 'Pesanan tidak ditemukan'], 404);
     }
 }
+public function show($id)
+{
+    $history = HistoryPembelian::find($id);
+    if (!$history) {
+        return redirect()->route('home')->with('error', 'History not found');
+    }
+
+    return view('Customer.showhistory', compact('history'));
+}
+
+
+
 
 }

@@ -10,7 +10,10 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\ChartsController;
+use App\Http\Controllers\ExcelController;
+
 
 // use App\Http\Controllers\CategoryController;
 
@@ -62,21 +65,24 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::post('/update-order-status/{orderId}', [ReviewController::class,'updateStatus'])->name('updateStatus');
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/historypesanan', [ProfileController::class, 'historypesanan'])->name('historypesanan');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/notifications/markAsRead/{id}', [Customer::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/getOrder/{orderId}', [Customer::class, 'getOrderDetails'])->name('getOrderDetails');
 
     // routes/web.php
+    // Route::post('/store-review', [ReviewController::class, 'storeReview'])->name('storeReview');
 
     Route::get('/print-struk/{orderId}', [PDFController::class, 'printStruk'])->name('print.struk');
     Route::get('/revenue-chart-data', [ChartsController::class, 'revenueChartData']);
     Route::get('/cek-pengiriman/{orderId}', [Customer::class, 'cekPengiriman'])->name('cekPengiriman');
     Route::put('/update-delivery-status/{id}', [Customer::class, 'updateDeliveryStatus'])->name('updateDeliveryStatus');
-
-
-
     Route::get('/selesai-pengiriman/{pengiriman}', [Customer::class, 'selesaiPengiriman'])->name('customer.selesaiPengiriman');
 
+    Route::get('/updateOrderStatus/{orderId}', [Customer::class, 'updateOrderStatus'])->name('updateOrderStatus');
+    Route::get('/history/show/{id}', [ReviewController::class, 'show'])->name('show.history');
+
+    Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 });
 
 
@@ -102,21 +108,21 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/product/deleteproduct/{id}', [ProductController::class, 'deleteproduct'])->name('delete_product');
     //ORDER
     // Route::get('/admin/order', [ProductController::class, 'index'])->name('admin.Product');
-
     Route::get('/admin/transaction', [AdminController::class, 'transaction'])->name('admintransaction');
     Route::put('/admin/transaction/{id}/mark-as-paid',[AdminController::class, 'markAsPaid']    )->name('admin.transaction.markAsPaid');
     Route::get('/admin/delivery', [AdminController::class, 'delivery'])->name('admindelivery');
-
     Route::get('/delivery/{id}', [AdminController::class, 'show'])->name('admin.delivery.show');
     Route::get('/delivery/{id}/update-status', [AdminController::class, 'updateStatusForm'])->name('admin.delivery.updateStatusForm');
     Route::put('/delivery/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.delivery.updateStatus');
+    Route::get('/galeris', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::get('/galeri/create', [GaleriController::class, 'create'])->name('galeri.create');
+    Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::get('/galeri/{galeri}/edit', [GaleriController::class, 'edit'])->name('galeri.edit');
+    Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
+    Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 
-
-    // Route::post('/midtrans-callback', [Customer::class, 'callback'])->name('callback');
-
-    
-
-
+    Route::get('/monthly-income', [ExcelController::class, 'monthlyIncome']);
+    Route::get('/export-excel', [ExcelController::class, 'exportExcel']);
 });
 
 

@@ -10,7 +10,7 @@ use App\Models\Order;
 use App\Models\Pengiriman;
 
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use App\Notifications\PesananDibayar;
 
 
@@ -72,7 +72,6 @@ class AdminController extends Controller
         return view('admin.delivery.delivery', compact('pengiriman'));
     }
 
-    
     public function show($id)
     {
         $pengiriman = Pengiriman::findOrFail($id);

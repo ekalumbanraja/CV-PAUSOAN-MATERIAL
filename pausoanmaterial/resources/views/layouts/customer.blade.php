@@ -10,6 +10,10 @@
   <meta name="keywords" content="bootstrap, bootstrap4" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 		<!-- Bootstrap CSS -->
 		<script type="text/javascript"
@@ -189,7 +193,7 @@
 									<a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;">
 										{{ __('Edit Profil') }}
 									</a>
-									<a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;">
+									<a class="dropdown-item" href="{{ route('historypesanan') }}" style="font-size: 14px;">
 										{{ __('Pesanan') }}
 									</a>
 									

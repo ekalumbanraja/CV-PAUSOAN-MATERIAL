@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pengiriman', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id')->primary();
+            $table->unsignedBigInteger('order_id');
             $table->enum('status', ['diproses', 'dikirim','diterima','selesai'])->default('diproses');
             $table->string('alamat');
             $table->timestamps();

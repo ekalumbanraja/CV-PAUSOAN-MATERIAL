@@ -15,7 +15,10 @@ class HistoryPembelian extends Model
         'total_price',
         'status',
         'address',
-        'name', // Menyimpan nama pengguna yang melakukan pembelian
+        'nama',
+        'namaproduk',
+        'city',
+        'phone' // Menyimpan nama pengguna yang melakukan pembelian
     ];
  public function user()
     {

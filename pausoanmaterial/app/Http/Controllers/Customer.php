@@ -20,47 +20,48 @@
         }
 
         public function addToCart(Request $request)
-        {
-            // Ambil user yang sedang login
-            $user = Auth::user();
-        
-            // Ambil data produk dari permintaan
-            $idProduct = $request->input('idProduct');
-            $stokProduct = $request->input('stok');
-            $totalPrice = $request->input('totalPrice');
-        
-            // Periksa apakah stok cukup untuk ditambahkan ke dalam keranjang
-            $qty = (int)$request->input('qty');
-            if ($qty <= 0 || $qty > $stokProduct) {
-                return redirect()->back()->with('error', 'Jumlah tidak valid atau stok tidak mencukupi.');
-            }
-        
-            // Temukan produk berdasarkan ID
-            $product = Product::find($idProduct);
-        
-            // Pastikan produk ditemukan
-            if (!$product) {
-                return redirect()->back()->with('error', 'Produk tidak ditemukan.');
-            }
-        
-            // Cek apakah produk sudah ada di keranjang belanja user
-            $existingCartItem = Cart::where('idUser', $user->id)->where('id_barang', $idProduct)->first();
-        
-            if ($existingCartItem) {
-                // Jika produk sudah ada di keranjang, kembalikan pesan error
-                return redirect()->back()->with('error', 'Produk sudah ada di keranjang.');
-            } else {
-                // Jika produk belum ada di keranjang, tambahkan sebagai item baru
-                $cartItem = new Cart();
-                $cartItem->idUser = $user->id;
-                $cartItem->id_barang = $idProduct;
-                $cartItem->stok = $qty;
-                $cartItem->price = $totalPrice; // Gunakan total price yang dihitung
-                $cartItem->save();
-            }
-        
-            return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+    {
+        // Ambil user yang sedang login
+        $user = Auth::user();
+    
+        // Ambil data produk dari permintaan
+        $idProduct = $request->input('idProduct');
+        $totalPrice = $request->input('totalPrice');
+    
+        // Periksa apakah stok cukup untuk ditambahkan ke dalam keranjang
+        $qty = (int)$request->input('qty');
+        $product = Product::find($idProduct);
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Produk tidak ditemukan.');
         }
+
+        if ($qty <= 0 || $qty > $product->stok) {
+            return redirect()->back()->with('error', 'Jumlah tidak valid atau stok tidak mencukupi.');
+        }
+    
+        // Cek apakah produk sudah ada di keranjang belanja user
+        $existingCartItem = Cart::where('idUser', $user->id)->where('id_barang', $idProduct)->first();
+    
+        if ($existingCartItem) {
+            return redirect()->back()->with('error', 'Produk sudah ada di keranjang.');
+        } else {
+            // Jika produk belum ada di keranjang, tambahkan sebagai item baru
+            $cartItem = new Cart();
+            $cartItem->idUser = $user->id;
+            $cartItem->id_barang = $idProduct;
+            $cartItem->stok = $qty;
+            $cartItem->price = $totalPrice;
+            $cartItem->save();
+
+            // Kurangi stok produk
+            $product->stok -= $qty;
+            $product->save();
+        }
+    
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
+    }
+
         
         public function cart()
         {
@@ -197,7 +198,7 @@
             }
 
             public function placeorder(Request $request)
-        {
+            {
             // Mendapatkan pengguna yang sedang login
             // dd($request->all());
             $user = Auth::user();
@@ -205,7 +206,7 @@
             $idBarangArray = [];
             $namaProdukArray = []; // definisikan array untuk menyimpan nama produk
             
-            // Iterasi melalui request untuk mendapatkan id_barang dan nama_produk
+            // Iterasi melalui request untuk mendaxpatkan id_barang dan nama_produk
             foreach ($request->id_barang as $index => $idBarang) {
                 $idBarangArray[] = $idBarang;
                 
@@ -216,7 +217,9 @@
             }
             
             // Simpan pesanan ke database
+
             $order = new Order();
+            $order->id = $request->input('order_id');
             $order->user_id = $user->id;
             $order->recipient_name = $request->input('recipient_name');
             $order->address = $request->input('address');
@@ -238,16 +241,13 @@
             // Parameter transaksi untuk Midtrans
             $params = array(
                 'transaction_details' => array(
-                    'order_id' => rand(), // Gunakan ID pesanan yang sudah disimpan
+                    'order_id' => $order->id, 
                     'gross_amount' => $order->total_price,
                 ),
                 'customer_details' => array(
                     'first_name' => $order->recipient_name,
                     'user_id' => $user->id,
                 )
-                // 'Product_details'=> array(
-                //     'product_name' => $order->namaproduk,
-                // )
             );
 
                 // Dapatkan token SNAP setelah menyimpan pesanan
@@ -256,7 +256,7 @@
             // Simpan token SNAP ke dalam pesanan yang sudah ada
             $order->snap_token = $snapToken;
             $order->save();
-    
+            // dd($request->all());  
             // Hapus item keranjang
             Cart::where('idUser', $user->id)->delete();
 
@@ -264,17 +264,17 @@
             return redirect()->route('transaction', compact('snapToken'))->with('success', 'Order placed successfully!');
         }
 
-        public function callback(Request $request){
-            $serverkey = config('midtrans.serverKey'); 
-            $hashed= hash("sha512",$request->order_id.$request->status_code.$request->gross_amount.$serverkey);
-            if($hashed==$request->signature_key){
-                if($request->transaction_status=='capture'){
-                $order=Order::find($request->order_id);
-                $order->update(['status'=>'paid']);
+        // public function callback(Request $request){
+        //     $serverkey = config('midtrans.serverKey'); 
+        //     $hashed= hash("sha512",$request->order_id.$request->status_code.$request->gross_amount.$serverkey);
+        //     if($hashed==$request->signature_key){
+        //         if($request->transaction_status=='capture'){
+        //         $order=Order::find($request->order_id);
+        //         $order->update(['status'=>'paid']);
 
-            }
-        }
-        }
+        //     }
+        // }
+        // }
        public function updateStatus(Request $request, $orderId)
         {
         // Validasi request
@@ -331,52 +331,74 @@
             // Keluarkan konten PDF ke browser
             $dompdf->stream('struk_pembayaran.pdf', array('Attachment' => 0));
         }
-    public function cekPengiriman($orderId)
-    {
-        // Ambil data pengiriman berdasarkan ID pesanan
-        $pengiriman = Pengiriman::where('order_id', $orderId)->first();
-
-    // Jika data pengiriman ditemukan, tampilkan detail pengiriman
-    if ($pengiriman) {
-        return view('customer.Pengirimandetail', compact('pengiriman'));
-    } else {
-        // Jika tidak ditemukan, tampilkan pesan error atau redirect ke halaman sebelumnya
-        return redirect()->back()->with('error', 'Pengiriman tidak ditemukan.');
-    }
-    
-    }
-
-
-        public function updateDeliveryStatus($id)
+        public function cekPengiriman($orderId)
         {
-            // Cari pengiriman berdasarkan ID
-            $pengiriman = Pengiriman::findOrFail($id);
-            $order = Order::findOrFail($pengiriman->order_id);
+            // Ambil data pengiriman berdasarkan ID pesanan
+            $pengiriman = Pengiriman::where('order_id', $orderId)->first();
 
-            
-            // Perbarui status pengiriman menjadi Selesai
-            $pengiriman->status = 'Selesai';
-            $pengiriman->save();
-            
-            // Dapatkan user yang sedang login
-            $user = Auth::user();
+        // Jika data pengiriman ditemukan, tampilkan detail pengiriman
+        if ($pengiriman) {
+            return view('customer.Pengirimandetail', compact('pengiriman'));
+        } else {
+            // Jika tidak ditemukan, tampilkan pesan error atau redirect ke halaman sebelumnya
+            return redirect()->back()->with('error', 'Pengiriman tidak ditemukan.');
+        }
         
-            // Salin data pengiriman ke tabel history_pembelian
-            $history = new HistoryPembelian();
-            $history->user_id = $user->id; // Ambil ID pengguna yang sedang login
-            $history->order_id = $order->id; // Gunakan ID pesanan yang terkait dengan pengiriman
-            $history->name = $order->recipient_name; // Gunakan nama penerima pengiriman
-            $history->total_price = $order->total_price;
-            $history->address = $order->address; //
-            $history->status = 'Selesai';
-            $history->save();
-            // dd($history);
-            // Hapus pesanan terkait dengan pengiriman
-            // $order->delete();
-            
-            // Redirect kembali ke halaman detail pengiriman dengan pesan sukses
-            return redirect()->route('transaction')->with('success', 'Status pengiriman berhasil diperbarui menjadi Selesai.');
+        }
+        public function updateDeliveryStatus($id)
+    {
+        // Cari pengiriman berdasarkan ID
+        $pengiriman = Pengiriman::findOrFail($id);
+        $order = Order::findOrFail($pengiriman->order_id);
 
+        // Perbarui status pengiriman menjadi Selesai
+        $pengiriman->status = 'Selesai';
+        $pengiriman->save();
+
+        // Dapatkan user yang sedang login
+        $user = Auth::user();
+
+        // Urai id_barang dan nama_produk JSON menjadi array
+        $idBarangArray = json_decode($order->id_barang, true);
+        $namaProdukArray = json_decode($order->namaproduk, true);
+
+        // Simpan data ke history_pembelian
+        $history = new HistoryPembelian();
+        $history->user_id = $user->id; // Ambil ID pengguna yang sedang login
+        $history->order_id = $order->id; // Gunakan ID pesanan yang terkait dengan pengiriman
+        $history->id_barang = json_encode($idBarangArray); // Simpan sebagai JSON
+        $history->namaproduk = json_encode($namaProdukArray); // Simpan sebagai JSON
+        $history->nama = $order->recipient_name; // Gunakan nama penerima pengiriman
+        $history->total_price = $order->total_price;
+        $history->address = $order->address;
+        $history->kodepos = $order->kodepos;
+        $history->city = $order->city;
+        $history->phone = $order->phone;
+        $history->status = 'Selesai';
+        $history->save();
+
+        // Redirect kembali ke halaman detail pengiriman dengan pesan sukses
+        return redirect()->route('transaction')->with('success', 'Status pengiriman berhasil diperbarui menjadi Selesai.');
+    }
+
+        
+        public function updateOrderStatus($orderId)
+        {
+            // Temukan pesanan berdasarkan ID
+            $order = Order::find($orderId);
+
+            // Pastikan pesanan ditemukan
+            if ($order) {
+                // Ubah status pesanan menjadi "paid"
+                $order->status = 'paid';
+                $order->save();
+                return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui.');
+
+            }
+            // dd($orderId);
+
+            // Jika pesanan tidak ditemukan
+            return redirect()->back()->with('error', 'Pesanan tidak ditemukan.');
         }
             
 }

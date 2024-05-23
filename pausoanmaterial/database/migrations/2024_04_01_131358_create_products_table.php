@@ -15,16 +15,16 @@
                     $table->id();
                     $table->string('sku');
                     $table->string('product_name')->nullable();
-                    $table->unsignedBigInteger('category_id'); // Menambahkan kolom category_id sebagai foreign key
-                    $table->string('stok')->nullable();
+                    $table->unsignedBigInteger('category_id');
+                    $table->integer('stok')->nullable(); // Change to integer
                     $table->string('image')->nullable();
                     $table->string('description')->nullable();
                     $table->decimal('price', 40, 2)->nullable();
                     $table->timestamps();
-            
-                    // Menambahkan constraint foreign key ke kolom category_id
+                
                     $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
                 });
+                
             }
             
 

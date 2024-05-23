@@ -102,7 +102,7 @@
     </div>
   </div>
   <input type="hidden" id="total_price" name="total_price" value="{{ $totalPrice }}">
-
+  <input type="hidden" name="order_id" value="{{ rand()}}">
     {{-- <input type="hidden" name="namabarang[]" value="{{ $cartItem->product->product_name }}"> --}}
 
   @if($cartItems->isNotEmpty())
