@@ -47,5 +47,10 @@ class HomeController extends Controller
         return view('Admin/product');
     }
 
+    public function welcome2()
+    {
+        return view('Customer/home2');
+    }
+
 
 }

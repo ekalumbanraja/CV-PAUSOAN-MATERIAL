@@ -1,6 +1,6 @@
 <!-- resources/views/profile/edit.blade.php -->
 
-@extends('layouts.customer')
+@extends('layouts.customer2')
 
 @section('content')
 @if (session('status'))
@@ -75,16 +75,8 @@
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Edit Profil') }}</div>
-
+                    <hr>
+                    
                     <div class="card-body">
                         <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                             @csrf
@@ -101,7 +93,7 @@
                             </div> --}}
                         </form>
 
-                        <hr>
+                        {{-- <hr> --}}
 
                         <form method="POST" action="{{ route('profile.update-password') }}">
                             @csrf
@@ -152,6 +144,7 @@
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>

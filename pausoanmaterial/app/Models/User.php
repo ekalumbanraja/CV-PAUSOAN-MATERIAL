@@ -1,19 +1,18 @@
 <?php
- 
+
 namespace App\Models;
- 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
- 
 use Illuminate\Database\Eloquent\Casts\Attribute;
- 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
- 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,33 +22,54 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type'
+        'type',
+        // 'image', // Add 'image' to mass assignable attributes
     ];
- 
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
- 
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
- 
+
     /**
-     * Interact with the user's first name.
+     * Get the user's type.
      *
-     * @param  string  $value
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @param  int  $value
+     * @return string
      */
-    protected function type(): Attribute
+    protected function getTypeAttribute($value): string
     {
-        return new Attribute(
-            get: fn ($value) =>  ["user","admin", "manager"][$value],
-        );
+        return ["user", "admin", "manager"][$value];
     }
+
+    /**
+     * Boot the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Set default image when creating a new user
+        static::creating(function ($user) {
+            if (empty($user->image)) {
+                // $user->image = asset('images/oto.jpg');
+            }
+        });
+    }
+
+    /**
+     * Get the user's orders.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
-    
 }

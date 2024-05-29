@@ -34,7 +34,7 @@ Auth::routes();
 Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
 Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
 Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');
-Route::get('/services',  [GuestController::class, 'services'])->name('services');
+Route::get('/galery',  [GuestController::class, 'galeri'])->name('galeri');
 
 
 // Route::post('/add-to-cart-single', [Customer::class, 'addToCartSingle'])->name('addToCartSingle');
@@ -72,6 +72,8 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 
     // routes/web.php
     // Route::post('/store-review', [ReviewController::class, 'storeReview'])->name('storeReview');
+    // Route::get('/cek-pengiriman/{id}', [Customer::class, 'destroy']')->name('cekPengiriman');
+
 
     Route::get('/print-struk/{orderId}', [PDFController::class, 'printStruk'])->name('print.struk');
     Route::get('/revenue-chart-data', [ChartsController::class, 'revenueChartData']);
@@ -109,14 +111,15 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     //ORDER
     // Route::get('/admin/order', [ProductController::class, 'index'])->name('admin.Product');
     Route::get('/admin/transaction', [AdminController::class, 'transaction'])->name('admintransaction');
-    Route::put('/admin/transaction/{id}/mark-as-paid',[AdminController::class, 'markAsPaid']    )->name('admin.transaction.markAsPaid');
+    Route::put('/admin/transaction/{id}/mark-as-paid',[AdminController::class, 'markAsPaid']    )->name('admin.order.markAsPaid');
+    
     Route::get('/admin/delivery', [AdminController::class, 'delivery'])->name('admindelivery');
     Route::get('/delivery/{id}', [AdminController::class, 'show'])->name('admin.delivery.show');
     Route::get('/delivery/{id}/update-status', [AdminController::class, 'updateStatusForm'])->name('admin.delivery.updateStatusForm');
     Route::put('/delivery/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.delivery.updateStatus');
     Route::get('/galeris', [GaleriController::class, 'index'])->name('galeri.index');
     Route::get('/galeri/create', [GaleriController::class, 'create'])->name('galeri.create');
-    Route::post('/galeri', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::post('/galeri/store', [GaleriController::class, 'store'])->name('galeri.store');
     Route::get('/galeri/{galeri}/edit', [GaleriController::class, 'edit'])->name('galeri.edit');
     Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
     Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
@@ -125,6 +128,9 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/export-excel', [ExcelController::class, 'exportExcel']);
 });
 
+
+
+Route::get('/welcome2', [HomeController::class, 'welcome2']);
 
 
 

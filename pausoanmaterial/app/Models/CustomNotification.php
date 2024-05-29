@@ -1,6 +1,6 @@
 <?php
 
-// app/Models/CustomNotification.php
+// app/Models/CustomNotification.phpc
 
 namespace App\Models;
 

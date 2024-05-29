@@ -10,7 +10,7 @@ class Pengiriman extends Model
     use HasFactory;
     protected $table = 'pengiriman';
     protected $fillable = [
-        'order_id',
+        // 'order_id',
         'status',
         'alamat',
     ];

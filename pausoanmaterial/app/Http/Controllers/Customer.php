@@ -9,8 +9,11 @@
     use App\Models\Pengiriman;
     use App\Models\HistoryPembelian;
     use Dompdf\Dompdf;
+use App\Models\User;
+
     use Dompdf\Options;
 
+    use Illuminate\Support\Facades\Log;
 
     class Customer extends Controller
     {
@@ -143,52 +146,49 @@
             // return view('customer.checkout');
             return view('customer.checkout', compact('cartItems'));
         }
-       public function incrementQuantity($id)
-            {
-                $cartItem = Cart::find($id);
-                if (!$cartItem) {
-                    return redirect()->back()->with('error', 'Produk tidak ditemukan.');
-                }
-            
-                if ($cartItem->stok > 1) {
-                    $cartItem->stok++;
-                    $cartItem->save();
-                }
-                else {
-                    return redirect()->back()->with('error', 'Pemesanan Tidak Boleh 0.');
-                }
-            return redirect()->back();
+     public function incrementQuantity($id)
+{
+    $cartItem = Cart::find($id);
+    if (!$cartItem) {
+        Log::error("Cart item not found for id: $id");
+        return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+    }
 
-            }
-            
-        public function decrementQuantity($id)
-            {
-                $cartItem = Cart::find($id);
-                if (!$cartItem) {
-                    return redirect()->back()->with('error', 'Produk tidak ditemukan.');
-                }
-            
-                if ($cartItem->stok > 1) {
-                    $cartItem->stok--;
-                    $cartItem->save();
-                }
-                else {
-                    return redirect()->back()->with('error', 'Pemesanan Tidak Boleh 0.');
-                }
-            
-                return redirect()->back();
-            }
+    if ($cartItem->stok < $cartItem->product->stok) {
+        $cartItem->stok++;
+        $cartItem->save();
+    } else {
+        Log::error("Insufficient stock for product id: {$cartItem->product->id}");
+        return redirect()->back()->with('error', 'Stok tidak mencukupi.');
+    }
+    return redirect()->back();
+}
 
-           
+public function decrementQuantity($id)
+{
+    $cartItem = Cart::find($id);
+    if (!$cartItem) {
+        Log::error("Cart item not found for id: $id");
+        return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+    }
+
+    if ($cartItem->stok > 1) {
+        $cartItem->stok--;
+        $cartItem->save();
+    } else {
+        Log::error("Cannot decrement quantity below 1 for cart item id: $id");
+        return redirect()->back()->with('error', 'Pemesanan Tidak Boleh 0.');
+    }
+
+    return redirect()->back();
+}
             public function transaction(){
-                $user = Auth::user();
-
-
-                $orders = Order::where('user_id', $user->id)->get();
-                // $snapTokens = $orders ? $orders->snap_token : null;
-
-                return view('Customer.transaction',compact('orders'));
+                    $user = Auth::user();
+                    $orders = Order::where('user_id', $user->id)->get();
+                    // $orders = Order::where('user_id', $user->id);
+                    return view('Customer.transaction', compact('orders'));
             }
+
             public function destroy($id)
             {
                 $order = Order::findOrFail($id);
@@ -259,6 +259,7 @@
             // dd($request->all());  
             // Hapus item keranjang
             Cart::where('idUser', $user->id)->delete();
+            // Order::where('idUser', $user->id)->delete();
 
             // Redirect atau tampilkan pesan sukses
             return redirect()->route('transaction', compact('snapToken'))->with('success', 'Order placed successfully!');
@@ -335,13 +336,13 @@
         {
             // Ambil data pengiriman berdasarkan ID pesanan
             $pengiriman = Pengiriman::where('order_id', $orderId)->first();
-
+            // dd($pengiriman);
         // Jika data pengiriman ditemukan, tampilkan detail pengiriman
         if ($pengiriman) {
             return view('customer.Pengirimandetail', compact('pengiriman'));
         } else {
             // Jika tidak ditemukan, tampilkan pesan error atau redirect ke halaman sebelumnya
-            return redirect()->back()->with('error', 'Pengiriman tidak ditemukan.');
+            return redirect()->back()->with('error', 'Pengiriman belum diproses oleh admin. Tunggu admin memproses pesanan anda');
         }
         
         }
@@ -365,7 +366,7 @@
         // Simpan data ke history_pembelian
         $history = new HistoryPembelian();
         $history->user_id = $user->id; // Ambil ID pengguna yang sedang login
-        $history->order_id = $order->id; // Gunakan ID pesanan yang terkait dengan pengiriman
+        // $history->order_id = $order->id; // Gunakan ID pesanan yang terkait dengan pengiriman
         $history->id_barang = json_encode($idBarangArray); // Simpan sebagai JSON
         $history->namaproduk = json_encode($namaProdukArray); // Simpan sebagai JSON
         $history->nama = $order->recipient_name; // Gunakan nama penerima pengiriman
@@ -376,11 +377,12 @@
         $history->phone = $order->phone;
         $history->status = 'Selesai';
         $history->save();
+        // $order->delete();
+        
 
         // Redirect kembali ke halaman detail pengiriman dengan pesan sukses
-        return redirect()->route('transaction')->with('success', 'Status pengiriman berhasil diperbarui menjadi Selesai.');
+        return redirect()->route('transaction')->with('success', 'Pesanan telah selesai, Berikan review pada history pesanan ');
     }
-
         
         public function updateOrderStatus($orderId)
         {
@@ -395,6 +397,8 @@
                 return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui.');
 
             }
+            $customer = User::findOrFail($order->user_id);
+            
             // dd($orderId);
 
             // Jika pesanan tidak ditemukan

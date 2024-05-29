@@ -46,26 +46,45 @@ class AdminController extends Controller
     
     public function transaction()
     {
-        $transactions = Order::all();
-        return view('admin.transaction.transaction', compact('transactions'));
+        $orders = Order::where('status', 'paid')->get();
+        return view('admin.transaction.transaction', compact('orders'));
 
     }
     public function markAsPaid($id)
     {
         $order = Order::findOrFail($id);
-        $order->status = 'paid';
-        $order->save();
-
+        
+        // Notify the customer
         $customer = User::findOrFail($order->user_id);
         $customer->notify(new PesananDibayar);
-        // Auth::user()->notifications()->findOrFail($id)->markAsRead();
-
+        
+        // Create a new shipping record
         $pengiriman = new Pengiriman();
         $pengiriman->order_id = $order->id;
-        $pengiriman->alamat = $order->address; // asumsi alamat pengiriman sama dengan alamat pesanan
+        $pengiriman->alamat = $order->address; // Assume shipping address is the same as order address
         $pengiriman->save();
-        return redirect()->back()->with('success', 'Order marked as paid successfully.');
+        
+        // Redirect back with a success message
+        return redirect()->route('admin.delivery.show', $pengiriman->id)->with('success', 'Pengiriman sudah dikonfirmasi');
     }
+    public function cekPengiriman($id)
+{
+    $order = Order::findOrFail($id);
+
+    // Check if there is any shipping record related to this order
+    $pengiriman = Pengiriman::where('order_id', $order->id)->first();
+
+    if (!$pengiriman) {
+        // If there is no shipping record, it means the delivery is not processed yet
+        return response()->json(['status' => 'error', 'message' => 'Pengiriman belum diproses oleh admin.']);
+    }
+
+    // If there is a shipping record, proceed with your current logic
+    // For example, redirect to the delivery detail page
+    return redirect()->route('admin.delivery.show', $pengiriman->id);
+}
+
+    
     public function delivery()
     {
         $pengiriman = Pengiriman::all();

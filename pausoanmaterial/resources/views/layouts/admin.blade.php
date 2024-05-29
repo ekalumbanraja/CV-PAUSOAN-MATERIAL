@@ -218,20 +218,20 @@
                 <a href=" {{ url('admin/product') }} "><i class="notika-icon notika-mail"></i> Product</a>
               </li>
               <li>
-                <a href=" {{ url('/admin/transaction') }} "><i class="notika-icon notika-edit"></i> Transaction</a>
+                <a href=" {{ url('/admin/transaction') }} "><i class="notika-icon notika-edit"></i> Order</a>
               </li>
               <li>
                 <a href=" {{ url('/admin/delivery') }} "><i class="notika-icon notika-bar-chart"></i> Delivery</a>
               </li>
               <li>
-                <a href="#Tables"><i class="notika-icon notika-windows"></i> Order</a>
+                <a href="/galeris"><i class="notika-icon notika-windows"></i> Galery</a>
               </li>
-              <li>
+              {{-- <li>
                 <a href="#Forms"><i class="notika-icon notika-form"></i> Feedback</a>
               </li>
               <li>
                 <a href="#Appviews"><i class="notika-icon notika-app"></i>Purchase</a>
-              </li>
+              </li> --}}
               <!-- <li>
                 <a data-toggle="tab" href="#Page"><i class="notika-icon notika-support"></i> Pages</a>
               </li> -->
@@ -242,13 +242,12 @@
     </div>
    
     @yield('content')
-
     <div class="footer-copyright-area">
       <div class="container">
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="footer-copy-right">
-              <p>Copyright © 2018 . All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+              <p>CV PAUSOAN MATERIAL<a href="https://colorlib.com">2024</a>.</p>
             </div>
           </div>
         </div>
@@ -324,7 +323,7 @@
     <script src="{{ asset('admin/js/main.js') }}"></script>
     <!-- tawk chat JS
 		============================================ -->
-    <script src="{{ asset('admin/js/tawk-chat.js') }}"></script>
+    {{-- <script src="{{ asset('admin/js/tawk-chat.js') }}"></script> --}}
     @push('scripts')
   </body>
 </html>

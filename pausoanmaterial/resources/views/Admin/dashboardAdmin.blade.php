@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Dashboard One | Notika - Notika Admin Template</title>
+    <title>Pausoan Material </title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,7 +20,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <!-- Bootstrap CSS
-		============================================ -->
+		============  ================================ -->
     <link rel="stylesheet" href="{{ asset('admin/css/font-awesome.min.css') }}" />
     <!-- owl.carousel CSS
 		============================================ -->
@@ -218,23 +218,23 @@
                 <a href=" {{url('admin/category') }} "><i class="notika-icon notika-mail"></i> Category</a>
               </li>
               <li>
-                <a href="{{ url('admin/product')}}"><i class="notika-icon notika-mail"></i> Product</a>
+                <a href=" {{ url('admin/product') }} "><i class="notika-icon notika-mail"></i> Product</a>
               </li>
               <li>
-                <a href="{{ url('admin/transaction')}}"><i class="notika-icon notika-edit"></i> Transaction</a>
+                <a href=" {{ url('/admin/transaction') }} "><i class="notika-icon notika-edit"></i> Transaction</a>
               </li>
               <li>
-                <a href="#Charts"><i class="notika-icon notika-bar-chart"></i> Inventory</a>
+                <a href=" {{ url('/admin/delivery') }} "><i class="notika-icon notika-bar-chart"></i> Delivery</a>
               </li>
               <li>
-                <a href="#Tables"><i class="notika-icon notika-windows"></i> Order</a>
+                <a href="/galeris"><i class="notika-icon notika-windows"></i> Galery</a>
               </li>
-              <li>
+              {{-- <li>
                 <a href="#Forms"><i class="notika-icon notika-form"></i> Feedback</a>
               </li>
               <li>
                 <a href="#Appviews"><i class="notika-icon notika-app"></i>Purchase</a>
-              </li>
+              </li> --}}
               <!-- <li>
                 <a data-toggle="tab" href="#Page"><i class="notika-icon notika-support"></i> Pages</a>
               </li> -->
@@ -289,6 +289,7 @@
     </div>
     <!-- End Status area-->
     <!-- Start Sale Statistic area-->
+    <a href="/export-excel" class="btn btn-info">Export Excel</a>
 
     <div class="sale-statistic-area">
       <canvas id="revenueChart" width="400" height="100"></canvas>
@@ -299,7 +300,7 @@
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="footer-copy-right">
-              <p>Copyright © 2018 . All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+              <p>CV PAUSOAN MATERIAL<a href="https://colorlib.com">2024</a>.</p>
             </div>
           </div>
         </div>
@@ -405,6 +406,6 @@
     <script src="{{ asset('admin/js/main.js') }}"></script>
     <!-- tawk chat JS
 		============================================ -->
-    <script src="{{ asset('admin/js/tawk-chat.js') }}"></script>
+    {{-- <script src="{{ asset('admin/js/tawk-chat.js') }}"></script> --}}
   </body>
 </html>

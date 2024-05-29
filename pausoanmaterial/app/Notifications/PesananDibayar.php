@@ -22,7 +22,7 @@ class PesananDibayar extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => 'Pesanan Anda telah berhasil dibayar.',
+            'message' => 'Pesanan Anda telah diproses.',
             'link' => '/transaction' 
         ];
     }

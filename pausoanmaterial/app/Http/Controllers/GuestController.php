@@ -4,19 +4,25 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
-
-
+use App\Models\Galeri;
 class GuestController extends Controller
 {
     public function shop(Request $request)
-    {      
-        $categoryId = $request->query('category_id');
-        $products = Product::when($categoryId, function ($query) use ($categoryId) {
-            return $query->where('category_id', $categoryId);
-        })->get();
-        $categories = Category::all(); // Mendapatkan semua kategori
-        
+    {$category_id = $request->input('category_id');
+        $query = Product::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('product_name', 'LIKE', '%' . $request->search . '%')
+                  ->orWhere('description', 'LIKE', '%' . $request->search . '%');
+        }
+
+        if ($category_id) {
+            $query->where('category_id', $category_id);
+        }
+    
+        $products = $query->get();
+        // $products = $query->paginate();
+        $categories = Category::all();
         return view('Customer/product',compact('products', 'categories'));
     }
     public function view($id)
@@ -43,10 +49,12 @@ class GuestController extends Controller
     }
 
     public function index(){
-        return view('Customer.home');
+        return view('Customer/home2');
     }
 
-    public function services(){
-        return view('Customer.services');
+    public function galeri(){
+        $galeris = Galeri::all();
+
+        return view('Customer.services',compact('galeris'));
     }
 }

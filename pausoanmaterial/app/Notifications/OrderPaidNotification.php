@@ -42,7 +42,7 @@ class OrderPaidNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Order Paid Notification')
+                    ->subject('Pesanan telah dibuat')
                     ->view('vendor.notifications.order_paid', ['order' => $this->order]);
     }
 }
