@@ -28,9 +28,7 @@ Auth::routes();
 // });
 
 
-    Route::get('/', [GuestController::class, 'index'])->name('home');
-
-
+Route::get('/', [GuestController::class, 'index'])->name('home');
 Route::get('/shop', [GuestController::class, 'shop'])->name('shop');
 Route::get('/product/{id}',  [GuestController::class, 'view'])->name('product.show');
 Route::get('/aboutus',  [GuestController::class, 'aboutus'])->name('aboutus');

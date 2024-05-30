@@ -9,7 +9,7 @@
     use App\Models\Pengiriman;
     use App\Models\HistoryPembelian;
     use Dompdf\Dompdf;
-use App\Models\User;
+use App\Models\transactions;
 
     use Dompdf\Options;
 
@@ -394,10 +394,14 @@ public function decrementQuantity($id)
                 // Ubah status pesanan menjadi "paid"
                 $order->status = 'paid';
                 $order->save();
+
+
+                $transaction = new transactions();
+                $transaction->amount = $order->total_price;
+                $transaction->save();
                 return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui.');
 
             }
-            $customer = User::findOrFail($order->user_id);
             
             // dd($orderId);
 

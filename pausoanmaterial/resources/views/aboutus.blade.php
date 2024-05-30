@@ -1,4 +1,6 @@
 @extends("layouts.customer2")
+@section('title','About Us | PAUSOAN MATERIAL')
+
 @section('css')
 <style>
 	
@@ -199,7 +201,7 @@
 							<p class="stext-114 cl6 p-r-40 p-b-11">
 								Halo,
 
-Saya Pausoan sibarani , pemilik CV PAUSOAN MATERIAL. Terima kasih telah meluangkan waktu untuk mengunjungi situs kami. Di  CV PAUSOAN MATERIAL, kami memahami betapa pentingnya kualitas bahan bangunan dalam setiap proyek konstruksi Anda, baik besar maupun kecil. Itulah sebabnya kami berkomitmen untuk menyediakan hanya produk terbaik dengan pelayanan yang luar biasa.
+Saya Pausoan Hutagaol , pemilik CV PAUSOAN MATERIAL. Terima kasih telah meluangkan waktu untuk mengunjungi situs kami. Di  CV PAUSOAN MATERIAL, kami memahami betapa pentingnya kualitas bahan bangunan dalam setiap proyek konstruksi Anda, baik besar maupun kecil. Itulah sebabnya kami berkomitmen untuk menyediakan hanya produk terbaik dengan pelayanan yang luar biasa.
 
 Kami mengundang Anda untuk menjelajahi berbagai produk yang kami tawarkan dan merasakan sendiri dedikasi kami terhadap kualitas dan kepuasan pelanggan. Tim kami yang berpengalaman siap membantu Anda dengan segala kebutuhan konstruksi dan renovasi, memberikan saran ahli, dan memastikan Anda mendapatkan solusi yang tepat.
 
@@ -210,7 +212,7 @@ Salam hangat,
 Pausoan Si --}}
 
 							<span class="stext-111 cl8">
-								- Pausoan Sibarani
+								- Pausoan Hutagaol
 							</span>
 						</div>
 					</div>

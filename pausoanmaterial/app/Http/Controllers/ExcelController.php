@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\transactions;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MonthlyIncomeExport;
@@ -50,18 +51,18 @@ class ExcelController extends Controller
     //     // Mengembalikan response dengan file CSV yang akan diunduh
     //     return Response::stream($callback, 200, $headers);
     // }
-    public function monthlyIncome()
-    {
-        $monthlyIncome = Order::where('status', 'paid')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total_price) as total_income')
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->get();
+public function monthlyIncome()
+{
+    $monthlyIncome = transactions::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(amount) as total_income')
+        ->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->orderBy('month', 'desc')
+        ->get();
 
-        // Mengirim data ke view
-        return view('admin.excel.monthly_income', ['monthlyIncome' => $monthlyIncome]);
-    }
+    // Mengirim data ke view
+    return view('admin.excel.monthly_income', ['monthlyIncome' => $monthlyIncome]);
+}
+
 
     public function exportExcel()
     {

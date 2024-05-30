@@ -11,7 +11,7 @@
             <tr>
                 <td>{{ $income->year }}</td>
                 <td>{{ $income->month }}</td>
-                <td>{{ number_format($income->total_income, 2) }}</td>
+                <td>{{ number_format($income->total_income  ) }}</td>
             </tr>
         @endforeach
     </tbody>
