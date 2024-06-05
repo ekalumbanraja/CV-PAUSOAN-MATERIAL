@@ -43,6 +43,33 @@ class HomeController extends Controller
         $data = $sales->pluck('total');
         return view('Admin/dashboardAdmin',compact('labels', 'data','totalProducts','totalcategory','totalpesanan','totalPaidOrders'));
     }
+
+    public function adminHomee()
+{
+    $sales = transactions::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, SUM(amount) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
+
+    $totalProducts = Product::count();
+    $totalcategory = Category::count();
+    $totalpesanan = HistoryPembelian::count();
+    $totalPaidOrders = transactions::all()->sum('amount');
+    
+    $labels = $sales->pluck('month')->map(function($item) {
+        return \Carbon\Carbon::parse($item)->format('M Y');
+    });
+    $data = $sales->pluck('total');
+    
+    return view('Admin/dashboardAdmin2', compact('labels', 'data', 'totalProducts', 'totalcategory', 'totalpesanan', 'totalPaidOrders'));
+}
+
+    public function test()
+    {
+        return view('Admin/test');
+    }
+
+
     public function adminProduct()
     {
         return view('Admin/product');

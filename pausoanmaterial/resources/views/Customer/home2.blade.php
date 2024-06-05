@@ -11,7 +11,7 @@
     height: auto;
     padding: 40px 20px 40px 20px;
     border-radius: 20px;
-    margin-bottom: 120px;
+    /* margin-bottom: 120px; */
 }
 
 .tambunan:hover {
@@ -32,7 +32,7 @@
 
 </style>
 @endsection
-@section('title','Pausoan Material')
+@section('title','Home | Pausoan Material')
 @section('content')
 <body>
 	<!DOCTYPE html>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="about-img pb-bottom">
-                            <img src="{{ asset('images/dua.jpg') }}" alt="" class="w-100">
+                            <img src="{{ asset('images/tokobangunan bandung.jpg') }}" alt="" class="w-100">
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                     <div class="col-lg-10">
                         <div class="section-tittle mb-60 text-center pt-2">
                             <h2>Our services</h2>
-                            <p class="pera">Tidak hanya konstruksi , kami juga menawarkan beberapa service</p>
+                            <p class="pera">Tidak hanya jual beli , kami juga menawarkan beberapa service</p> yang dapat anda pesan melalui whatsapp kami  <a href="https://api.whatsapp.com/send?phone=6281396293306" class="nav-link" style="color: #000">+62 813-9629-3306</a>
                         </div>
                     </div>
                 </div>
@@ -117,8 +117,9 @@
                                         <img src="{{ asset('images/icon-1.png') }}" alt="">
                                     </div>
                                     <div class="cat-cap">
-                                        <h5>Construction Services</h5>
-                                        <p>Kami menyediakan jasa konstruksi untuk bangunan baru, baik itu untuk kebutuhan residensial, komersial, maupun industri.</p>
+                                        <h5>
+                                            Material Delivery</h5>
+                                        <p>Kami menawarkan layanan pengiriman material ke lokasi proyek Anda. Dengan armada transportasi yang handal, kami menjamin material akan sampai tepat waktu dan dalam kondisi baik.</p>
                                     </div>
                                 </div>
                             </div>
@@ -131,23 +132,9 @@
                                         <img src="{{ asset('images/icon-2.png') }}" alt="">
                                     </div>
                                     <div class="cat-cap">
-                                        <h5>Building modeling</h5>
-                                        <p>Kami bekerja sama dengan arsitek dan insinyur untuk merancang bangunan yang sesuai dengan kebutuhan dan keinginan Anda.
+                                        <h5>Heavy Equipment Rental</h5>
+                                        <p>Untuk proyek besar, kami juga menawarkan penyewaan alat berat seperti ekskavator, crane, dan bulldozer. Semua alat berat kami selalu dalam kondisi prima dan siap digunakan kapan saja.
                                         </p>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-10">
-                                <div class="tambunan">
-        
-                                <div class="single-cat mb-50">
-                                    <div class="cat-icon">
-                                        <img src="{{ asset('images/icon-3.png') }}" alt="">
-                                    </div>
-                                    <div class="cat-cap">
-                                        <h5>Pre Conscruction</h5>
-                                        <p>Dengan tim yang berpengalaman, kami memastikan setiap tahap konstruksi dilakukan dengan standar tinggi dan tepat waktu.</p>
                                     </div>
                                 </div>
                             </div>
@@ -160,13 +147,28 @@
                                         <img src="{{ asset('images/icon-4.png') }}" alt="">
                                     </div>
                                     <div class="cat-cap">
-                                        <h5>Buy product</h5>
-                                        <p>Terdapat produk bangunan yang kami jamin sangat lengkap dan dengan bahan yang berkualitas.</p>
+                                        <h5>Installation Services</h5>
+                                        <p>Untuk beberapa produk seperti keramik, plafon, dan lantai, kami juga menyediakan jasa pemasangan oleh tenaga ahli yang berpengalaman. </p>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-10">
+                                <div class="tambunan">
+        
+                                <div class="single-cat mb-50">
+                                    <div class="cat-icon">
+                                        <img src="{{ asset('images/icon-3.png') }}" alt="">
+                                    </div>
+                                    <div class="cat-cap">
+                                        <h5>Interior and Exterior Design</h5>
+                                        <p>Layanan desain interior dan eksterior kami mencakup perencanaan tata letak ruang, pemilihan warna, hingga pemilihan furnitur dan dekorasi. </p>
                                     </div>
                                 </div>
                             </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

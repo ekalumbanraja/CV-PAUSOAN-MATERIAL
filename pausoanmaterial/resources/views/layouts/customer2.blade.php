@@ -158,8 +158,8 @@
                                 @empty
                                     <a class="dropdown-item" href="#">Tidak ada notifikasi</a>
                                 @endforelse
-                                @if(auth()->check() && auth()->user()->notifications->count() > 5)
-                                    <a class="dropdown-item text-center" href="{{ route('notifications.index') }}">Lihat semua notifikasi</a>
+                                @if(auth()->check() && auth()->user()->notifications->count() > 15)
+                                    <a class="dropdown-item text-center" href="#">Lihat semua notifikasi</a>
                                 @endif
                             </div>
                         </div>

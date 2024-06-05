@@ -57,7 +57,7 @@
                                                             <form action="{{ route('admin.order.markAsPaid', $order->id) }}" method="POST">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <button type="submit">Atur Pengiriman</button>
+                                                                <button type="submit">Konfirmasi Pengiriman</button>
                                                             </form>
                                                         </td>
                                                     </tr>

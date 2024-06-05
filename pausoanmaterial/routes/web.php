@@ -95,6 +95,11 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
+    Route::get('/admin/home2', [HomeController::class, 'adminHomee'])->name('admin.home');
+    Route::get('/test', [HomeController::class, 'test'])->name('admin.home');
+
+
+
     Route::get('admin/category', [AdminController::class, 'index'])->name('category');
     Route::get('admin/category/tampilcategory', [AdminController::class, 'tampilcategory'])->name('tampil_category');
     Route::post('admin/category/tambahcategory', [AdminController::class, 'tambahcategory'])->name('tambah_category');

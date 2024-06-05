@@ -169,17 +169,17 @@
                     </h4>
 
                     <div class="flex-w flex-t bor12 p-b-13">
-                        <div class="size-208">
+                        {{-- <div class="size-208">
                             <span class="stext-110 cl2">
                                 Subtotal:
                             </span>
-                        </div>
+                        </div> --}}
 
-                        <div class="size-209">
+                        {{-- <div class="size-209">
                             <span class="mtext-110 cl2">
                                 $79.65
                             </span>
-                        </div>
+                        </div> --}}
                     </div>
 
                         {{-- <div class="flex-w flex-t bor12 p-t-15 p-b-30">

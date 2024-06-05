@@ -1,4 +1,5 @@
 @extends('layouts.customer2')
+@section('title','Transaction | Pausoan Material')
 
 @section('css')
 <style>

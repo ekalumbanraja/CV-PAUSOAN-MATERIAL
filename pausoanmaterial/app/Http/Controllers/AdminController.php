@@ -19,7 +19,8 @@ class AdminController extends Controller
 {
     
     public function index (){
-        $data = category::all();
+        // $data = category::all();
+        $data = Category::paginate(8); 
         return view('admin.category.category',compact('data'));
     }
     public function tampilcategory (){

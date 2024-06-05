@@ -377,7 +377,7 @@ public function decrementQuantity($id)
         $history->phone = $order->phone;
         $history->status = 'Selesai';
         $history->save();
-        // $order->delete();
+        $order->delete();
         
 
         // Redirect kembali ke halaman detail pengiriman dengan pesan sukses

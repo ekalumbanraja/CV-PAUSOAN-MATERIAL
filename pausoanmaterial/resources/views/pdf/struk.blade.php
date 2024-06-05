@@ -52,7 +52,7 @@
     </div>
 </body>
 </html>
-
+{{-- 
 <html>
 <head>
 <title>Faktur Pembayaran</title>
@@ -145,4 +145,4 @@ No Telp : -
 </table>
 </center>
 </body>
-</html>
+</html> --}}
