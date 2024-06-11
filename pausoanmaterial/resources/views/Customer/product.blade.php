@@ -3,43 +3,98 @@
 
 @section('css')
 <style>
+.block2 {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 350px;
+}
+
+.block2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
 .block2-img {
     width: 100%;
-    height: 100%; /* Atur tinggi gambar sesuai kebutuhan Anda */
-    object-fit: cover; /* Atur agar gambar memenuhi container tanpa mengubah aspek rasionya */
+    height: auto;
+    object-fit: cover;
 }
-.stext-106 {
+
+.block2-txt {
+    padding: 15px;
+}
+
+.block2-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    padding:10px 16px;
+    background-color: #6c7ae0;
+    color: #fff;
     font-size: 14px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    line-height: 1.7;
-    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
 }
-.hov1:hover {
-    color: #222;
+
+.block2:hover .block2-btn {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
-.bor3 {
-    border: 1px solid #e6e6e6;
+
+.block2-btn:hover {
+    background-color: #555;
+}
+
+.stext-104 {
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.stext-104:hover {
+    color: #6c7ae0;
+}
+
+/* Styles for the select dropdown */
+.category-select {
+    font-size: 16px;
+    color: #333;
+    background-color: #f8f8f8;
+    border: 2px solid #ddd;
     border-radius: 5px;
     padding: 10px 20px;
+    margin: 5px;
+    transition: all 0.3s ease;
 }
-.trans-04 {
-    transition: all 0.4s;
+
+.category-select:hover {
+    color: #000000;
+    background-color: #ffffff;
+    /* border-color: #6c7ae0; */
 }
-.m-r-32 {
-    margin-right: 32px;
-}
-.m-tb-5 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-.how-active1 {
-    border-bottom: 2px solid #6c7ae0; /* Adjust this to your preferred underline style */
-}
+
 .active-category {
-    border-bottom: 2px solid #6c7ae0; /* Ensure this matches the active style */
+    /* background-color: #6c7ae0; */
+    color: #fff;
+    /* border-color: #6c7ae0; */
 }
+
+.search-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 </style>
 @endsection
 
@@ -52,43 +107,28 @@
 
 <div class="container">
     <div class="flex-w flex-sb-m p-b-52">
-        <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-            <!-- All Products Button -->
+        <div class="m-tb-10">
+            <!-- Category Select Dropdown -->
             <form action="{{ route('shop') }}" method="GET">
-                <input type="hidden" name="category_id" value="">
-                <button type="submit" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 {{ request('category_id') == '' ? 'active-category' : '' }}">
-                    All Products
+                <select name="category_id" class="category-select" onchange="this.form.submit()">
+                    <option value="" {{ request('category_id') == '' ? 'selected' : '' }}>All Products</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->category_name }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+        <div class="search-container m-tb-10">
+            <!-- Search product -->
+            <form action="{{ route('shop') }}" method="GET" style="display: flex; align-items: center; padding: 5px 10px;">
+                <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search" placeholder="Search" style="border: none; outline: none; font-size: 1rem; color: #333; padding-left: 10px; width: 100%;">
+                <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                    <i class="zmdi zmdi-search" style="font-size: 1.5rem; color: #555;"></i>
                 </button>
             </form>
-            @foreach($categories as $category)
-            <form action="{{ route('shop') }}" method="GET">
-                <input type="hidden" name="category_id" value="{{ $category->id }}">
-                <button type="submit" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 {{ request('category_id') == $category->id ? 'active-category' : '' }}">
-                    {{ $category->category_name }}
-                </button>
-            </form>
-            @endforeach
         </div>
-
-        <div class="flex-w flex-c-m m-tb-10">
-            <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-                <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-                <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-                Search
-            </div>
-        </div>
-        
-        <!-- Search product -->
-        <div class="dis-none panel-search w-full p-t-10 p-b-15">
-            <form action="{{ route('shop') }}" method="GET">
-                <div class="bor8 dis-flex p-l-15">
-                    <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-                        <i class="zmdi zmdi-search"></i>
-                    </button>
-                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search" placeholder="Search">
-                </div>	
-            </form>
-        </div>			
     </div>
 
     <div class="row isotope-grid">
@@ -97,40 +137,25 @@
             <div class="block2">
                 <div class="block2-pic hov-img0">
                     <img src="{{ asset('images/' . $item->image) }}" alt="IMG-PRODUCT" class="block2-img">
-                    <a href="{{ route('product.show', $item->id) }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 ">
-                        Quick View
+                    <a href="{{ route('product.show', $item->id) }}" class="block2-btn flex-c-m stext-103">
+                        View Details
                     </a>
                 </div>
 
                 <div class="block2-txt flex-w flex-t p-t-14">
-                    <div class="block2-txt-child1 flex-col-l ">
-                        <a href="{{ route('product.show', $item->id) }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                    <div class="block2-txt-child1 flex-col-l">
+                        <a href="{{ route('product.show', $item->id) }}" class="stext-104">
                             {{ $item->product_name }}
                         </a>
-
                         <span class="stext-105 cl3">
                             Rp.{{ number_format($item->price, 0, ',', '.') }}
                         </span>
                     </div>
                 </div>
             </div>
-            <br>
-            <br>
-            <br>
         </div>
-      
-
         @endforeach
     </div>
-
-    <!-- Load more -->
-    {{-- @if($products->count() > 8)
-    <div class="flex-c-m flex-w w-full p-t-45">
-        <a href="{{ $products->nextPageUrl() }}" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-            Load More
-        </a>
-    </div>
-    @endif --}}
 </div>
 @endsection
 

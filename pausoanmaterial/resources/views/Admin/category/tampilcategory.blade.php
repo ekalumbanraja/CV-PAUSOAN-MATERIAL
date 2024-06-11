@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-success" id="submitBtn"><i class="bi bi-save"></i> Simpan</button>
+                <button type="submit" class="btn btn-info" id="submitBtn"><i class="bi bi-save"></i> Simpan</button>
             </div>
         </form>
     </div>

@@ -13,7 +13,7 @@ class ProductController extends Controller
         $categoryId = $request->query('category_id');
         $products = Product::when($categoryId, function ($query) use ($categoryId) {
             return $query->where('category_id', $categoryId);
-        })->get();
+        })->paginate(6);;
         $categories = Category::all(); // Mendapatkan semua kategori
     
         return view('admin.product.product', compact('products', 'categories'));

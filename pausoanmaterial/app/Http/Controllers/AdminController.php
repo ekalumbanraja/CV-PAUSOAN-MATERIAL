@@ -20,7 +20,7 @@ class AdminController extends Controller
     
     public function index (){
         // $data = category::all();
-        $data = Category::paginate(8); 
+        $data = Category::paginate(7); 
         return view('admin.category.category',compact('data'));
     }
     public function tampilcategory (){
@@ -88,7 +88,7 @@ class AdminController extends Controller
     
     public function delivery()
     {
-        $pengiriman = Pengiriman::all();
+        $pengiriman = Pengiriman::paginate(10);
         return view('admin.delivery.delivery', compact('pengiriman'));
     }
 

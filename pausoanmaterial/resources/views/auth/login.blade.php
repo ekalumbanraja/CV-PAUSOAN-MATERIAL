@@ -507,12 +507,19 @@ iframe {
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+                
                 <div class="container-login100-form-btn m-t-32">
                     <button type="submit" class="login100-form-btn">
                         Login
                     </button>
                 </div>
             </form>
+            <div class="container-login100-form-btn m-t-32">
+              <a href="{{ route('password.request') }}" class="txt1">
+                  Forgot Password?
+              </a>
+          </div>
+          
         </div>
     </div>
 </div>

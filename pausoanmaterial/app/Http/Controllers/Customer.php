@@ -128,16 +128,31 @@ use App\Models\transactions;
 
         public function removeFromCart($id)
         {
+            // Find the cart item by ID
             $cartItem = Cart::find($id);
-            
+        
+            // Check if the cart item exists
             if (!$cartItem) {
                 return redirect()->back()->with('error', 'Item not found in cart.');
             }
-            
+        
+            // Find the product associated with the cart item
+            $product = Product::find($cartItem->id_barang);
+        
+            // Check if the product exists
+            if ($product) {
+                // Increase the product's stock by the quantity in the cart item
+                $product->stok += $cartItem->stok;
+                $product->save();
+            }
+        
+            // Remove the cart item
             $cartItem->delete();
-            
+        
+            // Redirect back with a success message
             return redirect()->back()->with('success', 'Item removed from cart successfully.');
         }
+        
         public function checkout() {
             // Mengambil data keranjang belanja pengguna yang sedang masuk
             $user = Auth::user();

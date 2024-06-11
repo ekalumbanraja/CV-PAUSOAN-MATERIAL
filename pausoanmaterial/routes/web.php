@@ -96,7 +96,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
     Route::get('/admin/home2', [HomeController::class, 'adminHomee'])->name('admin.home');
-    Route::get('/test', [HomeController::class, 'test'])->name('admin.home');
+    // Route::get('/test', [HomeController::class, 'test'])->name('admin.home');
 
 
 
@@ -120,12 +120,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/delivery/{id}', [AdminController::class, 'show'])->name('admin.delivery.show');
     Route::get('/delivery/{id}/update-status', [AdminController::class, 'updateStatusForm'])->name('admin.delivery.updateStatusForm');
     Route::put('/delivery/{id}/update-status', [AdminController::class, 'updateStatus'])->name('admin.delivery.updateStatus');
-    Route::get('/galeris', [GaleriController::class, 'index'])->name('galeri.index');
-    Route::get('/galeri/create', [GaleriController::class, 'create'])->name('galeri.create');
-    Route::post('/galeri/store', [GaleriController::class, 'store'])->name('galeri.store');
-    Route::get('/galeri/{galeri}/edit', [GaleriController::class, 'edit'])->name('galeri.edit');
-    Route::put('/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
-    Route::delete('/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
+    Route::get('/admin/galeri', [GaleriController::class, 'index'])->name('galeri.index');
+    Route::get('admin/galeri/create', [GaleriController::class, 'create'])->name('galeri.create');
+    Route::post('admin/galeri/store', [GaleriController::class, 'store'])->name('galeri.store');
+    Route::get('admin/galeri/{galeri}/edit', [GaleriController::class, 'edit'])->name('galeri.edit');
+    Route::put('admin/galeri/{galeri}', [GaleriController::class, 'update'])->name('galeri.update');
+    Route::delete('admin/galeri/{galeri}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 
     Route::get('/monthly-income', [ExcelController::class, 'monthlyIncome']);
     Route::get('/export-excel', [ExcelController::class, 'exportExcel']);

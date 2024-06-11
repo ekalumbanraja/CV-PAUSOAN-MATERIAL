@@ -43,6 +43,7 @@
             padding-left: 10px;
             padding-right: 10px;
             border: 2px solid #25262a;
+            /* font-family:"Poppins",sans-serif; */
             color: #000 !important;
         }
         .site-logo a:hover {
@@ -103,7 +104,7 @@
             <div class="top-bar">
                 <div class="content-topbar flex-sb-m h-full container">
                     <div class="left-top-bar">
-                       Bukan Toko Bangunan Kaleng kaleng
+                        Jln. By pass, tambunan, Kec. Balige,Toba, Sumatera Utara 22312
                     </div>
                     <div class="right-top-bar flex-w h-full">
                         <a href="#" class="flex-c-m trans-04 p-lr-25">pausoanmaterial@gmail.com</a>
@@ -117,9 +118,12 @@
             <div class="wrap-menu-desktop">
                 <nav class="limiter-menu-desktop container">
                     <!-- Logo desktop -->
-                    <div class="site-logo">
-                        <a href="/welcome2" class="logo">
-                            CV PAUSOAN
+                    {{-- <div class=""> --}}
+                        <div class="site-logo">
+                        
+                        <a href="/welcome2" style="color: #000" class="logo">
+                           CV PAUSOAN
+                            {{-- <img src="{{ asset('admin2/assets/images/logo4.png') }}" style="width: 100px"  alt=""> --}}
                         </a>
                     </div>
 
@@ -204,7 +208,10 @@
         <div class="wrap-header-mobile">
             <!-- Logo mobile -->
             <div class="logo-mobile">
-                <a href="index.html"><img src="{{ asset('assete/images/icons/logo-01.png') }}" alt="IMG-LOGO"></a>
+                {{-- <a href="index.html"><img src="{{ asset('assete/images/icons/logo-01.png') }}" alt="IMG-LOGO"></a> --}}
+                <a href="/welcome2" style="color: #000" class="logo">
+                    CV PAUSOAN
+                </a>
             </div>
 
             <!-- Icon header -->
@@ -407,3 +414,5 @@
 
 </body>
 </html>
+
+

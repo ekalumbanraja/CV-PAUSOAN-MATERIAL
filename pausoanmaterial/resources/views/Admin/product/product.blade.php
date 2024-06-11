@@ -1,93 +1,129 @@
-@extends('layouts.admin')
+@extends('layouts.admin2')
 @section('title', 'Product')
+@section('css')
+<style>
+.sheila {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+</style>
+@endsection
 
 @section('content')
-
-<div class="breadcomb-area">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="breadcomb-list">
-              <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                  <div class="breadcomb-wp">
-                    <div class="breadcomb-icon">
-                      <i class="notika-icon notika-windows"></i>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0"></h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active">Product</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
-                    <div class="breadcomb-ctn">
-                      <h2>Product</h2>
-                      <p>Welcome to Product <span class="bread-ntd">table</span></p>
-                    </div>
-                    
-                  </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
-                    <div class="breadcomb-report">
-                        <button data-toggle="tooltip" data-placement="left" title="Tambah Produk" class="btn" onclick="window.location='{{ route('tampil_product') }}'">
-                            <i class="notika-icon notika-sent"></i>
-                        </button>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
                 </div>
                 <div class="normal-table-area">
-                    <form action="{{ route('admin.Product') }}" method="GET">
-                        <select name="category_id">
-                            <option value="">Semua Kategori</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit">Filter</button>
-                    </form> 
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="table-wrap">
+                                    <a href="{{ route('tampil_product') }}" class="btn btn-info mb-3">Add Product</a>
+                                    <form action="{{ route('admin.Product') }}" method="GET" class="form-inline mb-3">
+                                        <div class="form-group mr-2">
+                                            <label for="category_id" class="mr-2">Filter Category:</label>
+                                            <select name="category_id" id="category_id" class="form-control">
+                                                <option value="">All Categories</option>
+                                                @foreach($categories as $category)
+                                                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                    </form>
 
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="normal-table-list">
-                                <div class="basic-tb-hd">
-                                    <!-- <h2>Basic Table</h2>
-                                    <p>Basic example without any additional modification classes</p> -->
-                                </div>
-                                <div class="bsc-tbl">
-                                    <table class="table table-sc-ex">
+                                    <table class="table table-striped text-center">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Nama Produk</th>
-                                                <th>Gambar</th>
-                                                <th>Deskripsi</th>
-                                                <th>Kategori</th>
-                                                <th>Harga</th>
+                                                <th>Name</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($products as $index => $item)
                                             <tr>
-                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ ($products->currentPage() - 1) * $products->perPage() + $index + 1 }}</td>
                                                 <td>{{ $item->product_name }}</td>
-                                                <td><img src="{{ asset('images/' . $item->image) }}" alt="Product Image" style="max-width: 100px;"></td>
-                                                <td>{{ $item->description }}</td>
                                                 <td>{{ $item->category->category_name }}</td>
                                                 <td>Rp.{{ number_format($item->price, 0, ',', '.') }}</td>
-                                                <td>
-                                                    <a class="btn btn-warning notika-btn-warning" href="{{ route('edit_product', ['id' => $item->id]) }}">Edit</a>
-                                                    <a class="btn btn-danger notika-btn-danger" href="{{ route('delete_product', ['id' => $item->id]) }}">Delete</a>
+                                                <td class="sheila">
+                                                    <a class="btn btn-dark" data-toggle="modal" data-target="#viewProductModal{{ $item->id }}"><span class="mdi mdi-eye-circle-outline"></span></a>
+                                                    <a class="btn btn-warning" href="{{ route('edit_product', ['id' => $item->id]) }}">
+                                                        <span class="mdi mdi-file-edit-outline"></span>
+                                                    </a>
+                                                    <a class="btn btn-danger" href="{{ route('delete_product', ['id' => $item->id]) }}">
+                                                        <span class="mdi mdi-delete"></span>
+                                                    </a>
                                                 </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="pagination-area">
+                                    {{ $products->links('pagination::bootstrap-4') }}
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    @foreach($products as $item)
+                    <div class="modal fade" id="viewProductModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="viewProductModalLabel{{ $item->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewProductModalLabel{{ $item->id }}">View Product</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="text-center">
+                                        <img src="{{ asset('images/' . $item->image) }}" alt="Product Image" class="img-fluid mb-3">
+                                    </div>
+                                    <p><strong>Description:</strong> {{ $item->description }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+
                 </div>
-            </div>
-            </div>
-            </div>
             </div>
         </div>
     </div>
-        </div>
+</div>
+@endsection
 
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 @endsection

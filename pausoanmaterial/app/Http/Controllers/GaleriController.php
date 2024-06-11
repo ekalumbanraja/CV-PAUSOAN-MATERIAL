@@ -10,7 +10,7 @@ class GaleriController extends Controller
 {
     public function index()
     {
-        $galeris = Galeri::all();
+        $galeris = Galeri::paginate(5);
         return view('admin.galery.index', compact('galeris'));
     }
 

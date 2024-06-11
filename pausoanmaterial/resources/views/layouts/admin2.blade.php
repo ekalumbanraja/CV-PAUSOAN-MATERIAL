@@ -22,9 +22,15 @@
     <link href="{{ asset('admin2/assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin2/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <script src="{{ asset('admin2/assets/js/config.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 
 </head>
-
+<style>
+        a {
+            text-decoration: none !important;
+        }
+</style>
+@yield('css')
 <body>
 
     <!-- Begin page -->
@@ -35,11 +41,10 @@
             <!-- Brand Logo -->
             <div class="logo-box">
                 <!-- Brand Logo Light -->
-                <a class='logo-light' href='index.html'>
-                    <img src="assets/images/logo-light.png" alt="logo" class="logo-lg" height="28">
-                    <img src="assets/images/logo-sm.png" alt="small logo" class="logo-sm" height="28">
+                <a class='logo-light' href='/admin/home2'>
+                    <img src="{{ asset('admin2/assets/images/logo4.png') }}" alt="logo" class="logo-lg" height="28">
+                    <img src="{{ asset('admin2/assets/images/logo-sm.png') }}" alt="small logo" class="logo-sm" height="28">
                 </a>
-
                 <!-- Brand Logo Dark -->
                 <a class='logo-dark' href='index.html'>
                     <img src="assets/images/logo-dark.png" alt="dark logo" class="logo-lg" height="28">
@@ -64,31 +69,31 @@
 
                     <li class="menu-item">
                         <a class='menu-link waves-effect waves-light' href='{{url('admin/category') }} '>
-                            <span class="menu-icon"><i class="bx bx-calendar"></i></span>
+                            <span class="menu-icon"><span class="mdi mdi-order-bool-descending"></span></span></span>
                             <span class="menu-text"> Category </span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a class='menu-link waves-effect waves-light' href='{{url('admin/category') }} '>
-                            <span class="menu-icon"><i class="bx bx-calendar"></i></span>
+                        <a class='menu-link waves-effect waves-light' href='{{url('admin/product') }} '>
+                            <span class="menu-icon"><span class="mdi mdi-list-box"></span></span>
                             <span class="menu-text"> Product </span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a class='menu-link waves-effect waves-light' href='{{url('admin/category') }} '>
-                            <span class="menu-icon"><i class="bx bx-calendar"></i></span>
+                        <a class='menu-link waves-effect waves-light' href='{{url('admin/transaction') }} '>
+                            <span class="menu-icon"><span class="mdi mdi-notification-clear-all"> </span></span>
                             <span class="menu-text"> Order </span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a class='menu-link waves-effect waves-light' href='{{url('admin/category') }} '>
-                            <span class="menu-icon"><i class="bx bx-calendar"></i></span>
+                        <a class='menu-link waves-effect waves-light' href='{{url('admin/delivery') }} '>
+                            <span class="menu-icon"><span class="mdi mdi-truck-delivery"></span></span>
                             <span class="menu-text"> Delivery </span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a class='menu-link waves-effect waves-light' href='{{url('admin/category') }} '>
-                            <span class="menu-icon"><i class="bx bx-calendar"></i></span>
+                        <a class='menu-link waves-effect waves-light' href='{{route('galeri.index') }} '>
+                            <span class="menu-icon"><span class="mdi mdi-image"></span></span>
                             <span class="menu-text"> Gallery </span>
                         </a>
                     </li>
@@ -155,10 +160,15 @@
                                     <h6 class="text-overflow m-0">Welcome !</h6>
                                 </div> --}}
                                 <!-- item-->
-                                <a class='dropdown-item notify-item' href='/logout'>
-                                    <i class="fe-log-out"></i>
-                                    <span>Logout</span>
-                                </a>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                              document.getElementById('logout-form').submit();">
+                                 {{ __('Logout') }}
+                             </a>
+
+                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                 @csrf
+                             </form>
                             </div>
                         </li>
                     </ul>
